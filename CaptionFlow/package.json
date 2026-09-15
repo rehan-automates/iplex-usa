@@ -1,0 +1,19 @@
+{
+  "name": "asaan-caption",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Asaan Caption \u2014 Large-scale video caption platform (MERN)",
+  "scripts": {
+    "dev": "node dev.mjs",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "dev:matte": "node scripts/start-matte.mjs",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
