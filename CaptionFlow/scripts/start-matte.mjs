@@ -34,7 +34,7 @@ if (!venvPython) {
       '[matte]   cd segmentation\n' +
       '[matte]   python -m venv .venv          (Python 3.11 or 3.12)\n' +
       '[matte]   .venv\\Scripts\\pip install -r requirements.txt\n' +
-      '[matte] then set SEGMENT_SERVICE_URL=http://127.0.0.1:5001 in server/.env',
+      '[matte] then set SEGMENT_SERVICE_URL=http://127.0.0.1:5611 in server/.env',
   );
   process.exit(0);
 }
@@ -56,7 +56,7 @@ const ffprobe = bundled('@ffprobe-installer/ffprobe');
 if (ffmpeg && !env.FFMPEG_PATH) env.FFMPEG_PATH = ffmpeg;
 if (ffprobe && !env.FFPROBE_PATH) env.FFPROBE_PATH = ffprobe;
 
-const port = env.MATTE_PORT || '5001';
+const port = env.MATTE_PORT || '5611';
 console.log(`[matte] starting on :${port} (${path.basename(venvPython)})`);
 
 const child = spawn(

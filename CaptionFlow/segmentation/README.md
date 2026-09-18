@@ -27,7 +27,7 @@ feature looks broken. Force one with `MATTE_BACKEND=rvm|mediapipe`.
 cd segmentation
 python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app:app --host 127.0.0.1 --port 5001
+uvicorn app:app --host 127.0.0.1 --port 5611
 ```
 
 Python 3.11/3.12 — neither mediapipe nor torch publishes wheels for 3.14 yet.
@@ -37,7 +37,7 @@ With the `rvm` backend the first request downloads weights via `torch.hub`.
 Then in `server/.env`:
 
 ```
-SEGMENT_SERVICE_URL=http://127.0.0.1:5001
+SEGMENT_SERVICE_URL=http://127.0.0.1:5611
 ```
 
 Restart the API after changing that — it is read at boot.

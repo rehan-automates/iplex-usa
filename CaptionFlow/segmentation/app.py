@@ -3,7 +3,7 @@ segmentation/app.py — person-matte service for Asaan Caption's "text behind
 person" (server/src/services/segmentation.service.ts is the caller).
 
     pip install -r requirements.txt
-    uvicorn app:app --host 127.0.0.1 --port 5001
+    uvicorn app:app --host 127.0.0.1 --port 5611
 
 POST /segment  { "video": "<abs path>", "out": "<abs path>/mask.mp4",
                  "fps": 30, "maxEdge": 1280,

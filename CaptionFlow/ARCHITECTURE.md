@@ -17,8 +17,10 @@ pipeline is built the way it is.
 - [Real-time progress](#real-time-progress)
 - [Job queue](#job-queue)
 - [Editor & caption display templates](#editor--caption-display-templates)
+- [On-device media & export](#on-device-media--export)
 - [Export (burned-in video / SRT / JSON)](#export-burned-in-video--srt--json)
 - [Cleanup](#cleanup)
+- [Admin console: plans and templates](#admin-console-plans-and-templates)
 - [Configuration reference](#configuration-reference)
 - [Tuned heuristics — what they are and why](#tuned-heuristics--what-they-are-and-why)
 - [Dev workflow](#dev-workflow)
@@ -37,7 +39,8 @@ pipeline is built the way it is.
 | Cache / session store | Redis via `ioredis` (falls back to an in-process memory shim, `db/memoryRedis.ts`, when `REDIS_URL=memory`) |
 | Job queue | Bull (Redis-backed); falls back to direct in-process `setImmediate` execution when Redis is in memory mode |
 | Real-time | Socket.io (project-scoped rooms, JWT-authenticated handshake) |
-| Media processing | `fluent-ffmpeg` + `@ffmpeg-installer/ffmpeg` + `@ffprobe-installer/ffprobe` (bundled binaries, no system install needed) |
+| In-browser media | Mediabunny (demux / WebCodecs decode+encode / mux), OPFS + IndexedDB for local files, module Web Workers, MediaPipe tasks-vision (person matte) |
+| Media processing (server) | `fluent-ffmpeg` + `@ffmpeg-installer/ffmpeg` + `@ffprobe-installer/ffprobe` (bundled binaries, no system install needed) |
 | Speech-to-text | Deepgram prerecorded API (`nova-3`, word timestamps) via plain `fetch` — no SDK. (A dead OpenAI Whisper code path is kept block-commented alongside it for rollback; see [Transcription pipeline](#transcription-pipeline).) |
 | Script conversion / translation / emphasis | OpenAI `gpt-4.1-mini` (Chat Completions, strict JSON schema outputs) |
 | Subtitle burn-in | Self-authored `.ass` (Advanced SubStation Alpha) generation + `libass` via ffmpeg's `ass` filter |
@@ -72,12 +75,12 @@ CaptionFlow/
 
 ```mermaid
 flowchart LR
-    subgraph Client [React SPA :5173]
+    subgraph Client [React SPA :5610]
         UI[Editor / Upload / Dashboard]
         Store[Zustand stores]
     end
 
-    subgraph Server [Express API :4000]
+    subgraph Server [Express API :4610]
         REST[REST controllers]
         SIO[Socket.io]
         Queue[Bull queue / in-process fallback]
@@ -112,12 +115,27 @@ flowchart LR
     Export --> Disk
 ```
 
-Captions are never written to Mongo. The pipeline builds them in memory, assigns each a
+Captions live in the browser. The pipeline builds them in memory, assigns each a
 client-generated-style `id` (`crypto.randomUUID()`), and delivers the full set to the browser as
 the payload of the `captions:complete` socket event; the client persists them into its own
 IndexedDB and reads/writes them locally from then on (edits never round-trip to the server).
+
+**Retention.** The server also keeps a copy of the generated captions (`Project.captionsCache`,
+read via `GET /projects/:id/captions-cache` by a browser that has none) and the word-level
+transcript (`Project.transcription`, used by Rebuild). Both are kept until the user deletes the
+project's last video from Recent Videos (`DELETE /projects/:id/captions`), otherwise for 30 days
+(`CAPTIONS_CACHE_TTL_HOURS=720`, `TRANSCRIPT_TTL_DAYS=30`, swept by `cleanup.service.ts`). In the
+browser, [`lib/media/retention.ts`](client/src/lib/media/retention.ts) applies the same rule to
+exported videos, original videos and captions. Files already downloaded to the user's Downloads
+folder are outside the app's reach.
 Export requires the client to send its current IndexedDB-sourced caption array with every export
 request — there is no server-side fallback to read captions from.
+
+The same principle now covers the media itself. The **video stays on the user's device** (OPFS);
+by default only its audio track is uploaded for transcription, and burned-in exports are rendered
+in the browser with WebCodecs. The API is a control plane for those steps: plan checks, usage
+counting, transcription. The server keeps its ffmpeg renderer only as the fallback. See
+[On-device media & export](#on-device-media--export).
 
 ## Data model
 
@@ -158,7 +176,28 @@ Standard JWT access + refresh flow ([`middleware/auth.ts`](server/src/middleware
 
 ## Video upload
 
-Two paths, chosen client-side by file size ([`lib/uploader.ts`](client/src/lib/uploader.ts)):
+**Audio-only upload (default, admin flag `audioOnlyUploadEnabled`).** Before uploading, the Upload
+page stores the picked file in OPFS and probes it with Mediabunny
+([`lib/media/probe.ts`](client/src/lib/media/probe.ts)). It then extracts just the audio track
+([`lib/media/extractAudio.ts`](client/src/lib/media/extractAudio.ts), in `audio.worker.ts`),
+copying packets where the codec allows (AAC → `.m4a`, Opus/Vorbis → `.webm`, MP3, FLAC, PCM →
+`.wav`) and re-encoding otherwise. That file goes through the same single/chunked endpoints below
+with `mediaKind: 'audio'` plus `sourceMeta` (width, height, fps, duration, rotation, original size
+and name, codec). The project records `video.kind: 'audio'`, and plan file-size limits apply to
+`sourceMeta.size`. A 32 MB clip uploads ≈ 0.3 MB. Containers the browser can't read (e.g. AVI)
+fall back to a full-video upload.
+
+For an audio-only project:
+- `GET /projects/:id/video` answers 404 `VIDEO_LOCAL_ONLY`.
+- The editor plays the OPFS copy. On another device it shows a "locate the original file" banner
+  and re-stores the file once the size and duration match.
+- A server-side export or server matte first needs the real video. The client attaches it lazily
+  from OPFS: `POST /projects/:id/video/attach` (single request), or `/video/attach/init` followed
+  by `/upload/chunk` and `/upload/complete`. Until then, server-only operations answer 409
+  `VIDEO_NOT_ON_SERVER`.
+
+**Full-video upload** (flag off, or unreadable containers) keeps the original two paths, chosen
+client-side by file size ([`lib/uploader.ts`](client/src/lib/uploader.ts)):
 
 - **< 100MB (`FAST_UPLOAD_THRESHOLD_BYTES`)** — single multipart POST to `/upload/single`
   (memory-buffered by multer, capped at that same threshold).
@@ -185,7 +224,7 @@ in-process via `setImmediate` — same function either way:
 
 ```mermaid
 flowchart TD
-    A[Extract + compress audio<br/>ffmpeg, mono 16kHz-ish, 64kbps] --> Z{duration <= SINGLE_CALL_MAX_DURATION_SEC?<br/>default 20min}
+    A[Extract + compress audio<br/>ffmpeg, mono 16kHz-ish, 64kbps] --> Z{duration <= SINGLE_CALL_MAX_DURATION_SEC?<br/>default 3h}
     Z -->|yes, most videos| D1[Single Deepgram request<br/>whole file, one call]
     Z -->|no, long videos| B[Split into ~5min chunks<br/>1.5s overlap, auto re-split if > ~2GB]
     B --> D2[Deepgram transcription<br/>all chunks in parallel, per-chunk retry]
@@ -194,7 +233,7 @@ flowchart TD
     E --> F[Detect coverage gaps<br/>≥1s with no words]
     F --> G[Gap-fill: re-transcribe gap windows<br/>+2s real context, VAD + confidence/loop gated]
     G --> H{outputLanguage == roman_urdu / roman_punjabi?}
-    H -->|yes| I[Transliterate Urdu/Hindi/Gurmukhi-script words<br/>to Roman Urdu or Roman Punjabi, word-for-word — gpt-4.1-mini]
+    H -->|yes| I[Transliterate Urdu/Hindi/Punjabi-script words<br/>to Roman Urdu or Roman Punjabi, word-for-word — gpt-4.1-mini]
     H -->|no| J[Build captions from words<br/>word / batch / sentence / progressive]
     I --> J
     J --> K{target language set?}
@@ -220,11 +259,14 @@ files transcribe faster and cost less to send to Deepgram.
 [`runTranscriptionPipeline`](server/src/services/pipeline.service.ts) branches on the extracted
 audio's duration:
 
-- **`durationSeconds <= SINGLE_CALL_MAX_DURATION_SEC`** (default 1200s / 20min — covers the large
-  majority of videos): the whole extracted audio file is sent to Deepgram in **one request**. No
-  splitting, no VAD, no merge step beyond wrapping the single result in the same shape multi-chunk
-  results use.
-- **Longer videos**: [`splitAudioIntoChunks`](server/src/services/ffmpeg.service.ts) cuts the audio
+- **`durationSeconds <= SINGLE_CALL_MAX_DURATION_SEC`** (default 10800s / 3 hours): the whole
+  extracted audio file is sent to Deepgram in **one request**. No cut points, so no words split or
+  duplicated at chunk boundaries. If that request **times out** (Deepgram's 10-minute processing
+  limit, a 504), it is not retried; if it fails with a **5xx or network error**, it is retried once.
+  Either way the same audio is then transcribed through the **chunked path below** automatically
+  (`singleCallFallback` in the logs). 4xx errors (bad key, no credit, rate limit) don't fall back —
+  they would fail the same way in parts.
+- **Longer audio, or the fallback above**: [`splitAudioIntoChunks`](server/src/services/ffmpeg.service.ts) cuts the audio
   into `AUDIO_CHUNK_DURATION`-second windows (default **300s**) with `AUDIO_CHUNK_OVERLAP` (default
   1.5s) of extra audio at each boundary so a word spoken right at a cut isn't sliced in half — the
   merge step later re-derives which chunk each overlapping word "really" belongs to by its true
@@ -233,14 +275,13 @@ audio's duration:
 
 #### Single call vs. chunked fork, and the removed bulk VAD stage
 
-Chunking exists for parallelism, not Deepgram's file-size limit: Deepgram's prerecorded endpoint
-accepts up to ~2GB per request, and this app's compressed audio never gets remotely close. With N
-chunks firing at Deepgram concurrently, wall-clock time is bounded by *one chunk's* duration, not
-the whole video — which is what makes the chunked path worth keeping for long videos, and why
-collapsing everything to one call unconditionally would make long videos *slower*, not faster.
-Deepgram's prerecorded endpoint also has a soft server-side processing-time budget (roughly 10
-minutes wall-clock under load, reported as an occasional 504) that a single very long request risks
-more than several smaller ones — `SINGLE_CALL_MAX_DURATION_SEC` is set well under that with margin.
+Size is never the limit: the audio sent is MP3 mono 16 kHz 64 kbps, about 0.5 MB per minute (a
+3-hour video ≈ 90 MB), and Deepgram accepts 2 GB per request. The real limit is Deepgram's
+**10-minute processing time per request** (a 504 after that). One request gives the best accuracy (no
+boundaries) and the fewest calls, so it is used up to 3 hours; `SINGLE_CALL_TIMEOUT_MS` (11 min) sits
+just above Deepgram's limit so its 504 arrives first. The chunked path stays as the automatic
+fallback and for audio longer than 3 hours: with N chunks sent concurrently, wall-clock time is
+bounded by one chunk, and each request stays far from the processing limit.
 
 The old **bulk per-chunk VAD stage** — [`vad.service.ts`](server/src/services/vad.service.ts)
 classifying every split chunk as `speech`/`uncertain`/`silence` (RMS energy over 30ms windows +
@@ -263,7 +304,21 @@ either way.
 [`whisper.service.ts: transcribeChunk`](server/src/services/whisper.service.ts) — despite the
 filename, this now calls Deepgram's prerecorded `POST /v1/listen` (`model=nova-3`) via plain
 `fetch`, not the OpenAI SDK; a dead OpenAI Whisper code path is kept block-commented in the same
-file for rollback. Every chunk (or the single whole-file "chunk") is sent via `Promise.all` — fully
+file for rollback.
+
+Request settings come from `buildDeepgramQuery`:
+
+| Setting | Value |
+| --- | --- |
+| `language` | `ur` → `DEEPGRAM_URDU_LANGUAGE` (default `ur`, Urdu script); `pa` → `pa` (Gurmukhi); others pass through |
+| `detect_language` | sent for `auto` when `DEEPGRAM_AUTO_MODE=detect` (the default): Deepgram picks the language itself and reports it. The alternative, `multi`, only covers ten languages and **silently drops the speech it can't place** — 994 words against detection's 2853 on the same 14-minute Hindi/Urdu video (`src/scripts/deepgram-language-probe.ts`). Detection can't find Urdu or Punjabi, so those stay explicit choices in the popup |
+| `punctuate` | always |
+| `smart_format` | `DEEPGRAM_SMART_FORMAT` (default on): numbers, dates and currency as digits |
+| `keyterm` | the project's "Names & special words" (`settings.keyterms`, entered in the Prepare media popup): trimmed, de-duplicated, max 50 terms / 60 chars each / ~400 chars total (Deepgram allows 500 tokens) |
+| `tag` | `DEEPGRAM_TAG` (default `asaancaption`), for usage in the Deepgram console |
+
+Word `confidence` is averaged into `ChunkTranscription.confidence` (used by the gap-fill gate). Deepgram's
+sentiment, topics, intents, summaries and entity detection are English-only, so they are not used. Every chunk (or the single whole-file "chunk") is sent via `Promise.all` — fully
 parallel, gated only by [`deepgramPool.service.ts`](server/src/services/deepgramPool.service.ts), a
 hand-rolled multi-key concurrency pool with cooldown/failover on 401/402/429 responses
 (`DEEPGRAM_CONCURRENCY_PER_KEY` in-flight calls per key).
@@ -298,9 +353,20 @@ holes ≥1s with no words — evidence that Deepgram (or, on the chunked path, a
 real speech. For each gap, [`fillCoverageGaps`](server/src/services/pipeline.service.ts) re-extracts
 that window **with 2 extra seconds of real audio context on each side** (so the model has something
 to anchor on instead of guessing blind on an isolated island), runs it past `classifyChunkVad` to
+**Zero words back is never reported as success on audio that has sound.** A repeated phrase used to
+empty an entire result (`preferCompleteWords`): one request now carries a whole video, so a single
+repeat anywhere in it discarded everything, and the pipeline stored that as "ready — no speech
+detected" — a 14-minute video with 994 transcribed words arriving in the editor with no captions at
+all. Now repeats are collapsed and the words kept (a repeat that survives is logged, not surfaced as
+an error), and if a result really is empty, ffmpeg's `silencedetect` decides what it means: a silent
+file finishes `ready` with no captions, while audible audio fails with a message naming the language
+that returned nothing. The editor, for its part, rebuilds captions from the stored transcript
+(`Restore captions`, no re-transcription) when a finished project's captions are missing locally.
+
 skip windows that are genuinely silent, and re-transcribes the rest fresh. The result is only merged
-in if it passes a **local confidence/loop gate** — otherwise it's discarded: a missing caption is
-preferred over a confidently wrong one. This runs identically on both the single-call and chunked
+in if it passes a **local confidence/loop gate** — mean Deepgram word confidence of at least
+`GAP_FILL_MIN_CONFIDENCE` (default 0.55) and no repetition loop — otherwise it's discarded: a
+missing caption is preferred over a confidently wrong one. This runs identically on both the single-call and chunked
 paths — it isn't part of what the single-call path skips.
 
 ### Stage 6 — Roman Urdu / Roman Punjabi transliteration (optional, two-agent design)
@@ -313,9 +379,11 @@ script pass through completely unchanged — so a code-switched sentence like
 *"میرا نام داؤد ہے and I am a student"* becomes *"mera naam Dawood hai and I am a student"* with the
 speaker's exact code-switching intact.
 
-`roman_punjabi` works the same way via `transliterateWordsToRomanPunjabi`, converting Gurmukhi-script
-words to Roman Punjabi while leaving English words untouched — both share the same batching/retry
-mechanics, differing only in script-detection regex and system prompt.
+`roman_punjabi` works the same way via `transliterateWordsToRomanPunjabi`, converting Gurmukhi,
+Shahmukhi (Arabic-script) and Devanagari words to Roman Punjabi in common Pakistani spellings while
+leaving English words untouched. Its prompt only changes the script: it must never translate,
+correct, or guess words. Both share the same batching/retry mechanics, differing only in
+script-detection regex and system prompt.
 
 This is deliberately a **separate pass from transcription**, not a transcription-prompt trick:
 earlier attempts (back on Whisper) asked the STT model to transcribe *and* transliterate in one
@@ -408,10 +476,12 @@ to resize, stored as % of canvas so preview and export always agree), animation,
 which controls per-word layout, not just typography:
 
 `Project.style.template` is a 21-value enum (`styleSchema` in
-[`project.controller.ts`](server/src/controllers/project.controller.ts)); the picker in
-[`captionTemplates.ts`](client/src/lib/captionTemplates.ts) / `EditorPage.tsx`'s `UNIFIED_TEMPLATES`
-surfaces 17 of them as cards — `mixed`/`mixed2` (Mixed Styles / Mixed Styles 2) are hidden from the
-picker but kept fully wired (client render + server export) for restore:
+[`project.controller.ts`](server/src/controllers/project.controller.ts)); the picker cards come from
+`TEMPLATE_CATALOG` in [`templateCatalog.ts`](client/src/lib/templateCatalog.ts) (drawn by
+[`TemplateCard.tsx`](client/src/components/TemplateCard.tsx)), in the order an admin sets on the
+Templates page; cards an admin hides (by default Mixed Styles 2, Clean White and Editor Masala) stay
+fully wired (client render + server export). Applying a card also saves its key as
+`style.templateKey` for the admin export log:
 
 | Template | Look |
 | --- | --- |
@@ -457,7 +527,94 @@ State: `captionStore` (Zustand) holds live captions + pipeline stage, merging `c
 socket events until `finalized`; `editorChromeStore` holds UI-only editor chrome state; `authStore`
 holds the logged-in user and drives socket connect/disconnect.
 
+## On-device media & export
+
+**Local store.** [`lib/media/localMedia.ts`](client/src/lib/media/localMedia.ts) keeps files in
+OPFS, written through `opfs.worker.ts` sync access handles:
+- `sources/<projectId>.<ext>` — the original video.
+- `exports/<id>.mp4|webm` — finished renders.
+
+Metadata lives in the IndexedDB database `captionflow-media` (stores `sources`, `exports`). Old
+exports are evicted above 80% of the storage quota. The Upload page lists finished renders under
+**Recent exports** (download / delete).
+
+**Route choice** ([`lib/export/clientExport.ts`](client/src/lib/export/clientExport.ts)
+`chooseExportRoute`). An export renders on the device when:
+- the admin flag `clientExportEnabled` is on;
+- the browser has WebCodecs, OffscreenCanvas and worker fonts;
+- the local source exists and decodes;
+- the encoder accepts the output size.
+
+Otherwise it goes to the server (uploading the video first if the server has none).
+`localStorage.cf_export_path = 'server' | 'device'` forces a route for testing. Every template,
+including text behind person, can render on the device.
+
+**Flow** (EditorPage `renderOnDevice`):
+1. `POST /projects/:id/export/device/authorize` — the same plan gates as a server export
+   (`assertCanExport`). The project is not locked.
+2. `buildDeviceExportJob` prepares the caption overlay (below).
+3. [`export.worker.ts`](client/src/lib/export/export.worker.ts) renders the file:
+   - Mediabunny `Conversion` decodes the source.
+   - `video.process` draws each frame contained on black, then the caption overlay at the
+     frame's timestamp, then (text behind person) the person cut-out on top.
+   - The video is encoded as H.264 (MP4, ~8 Mbps at 1080p) or VP9 (WebM, quantizer 32). By
+     default the output is capped at 30 fps (the modal's Frame rate option keeps 60 fps), because
+     encoding is the slow step: a 60 fps source renders in about half the time. Audio packets are
+     copied (the AAC encoder only loads when a copy is impossible).
+   - The output is streamed into OPFS.
+4. `POST .../export/device/complete` records usage and `export.source: 'device'`, then
+   **deletes the server's copies** of the source, audio, preview and masks: the product keeps no
+   media after an export. Failures go to `.../failed` (`fallback: true` when the server takes
+   over).
+
+The modal shows device progress and warns before the tab is closed; a wake lock keeps phones awake.
+A failed on-device render is **retried once on the device** (`DEVICE_RENDER_ATTEMPTS` in
+EditorPage.tsx); it no longer moves to the server (that fallback is kept commented out in
+`renderOnDevice`). A full disk or a video the browser can't decode is not retried; the modal
+explains it. The server render is still used when the browser can't export at all (no WebCodecs) or
+the admin turns device exports off.
+Analytics count `exportsDevice`, `exportsDeviceFailed`, `exportsDeviceFallback` and
+`exportsServer`.
+
+**Overlays.**
+- *Kinetic templates* use the shared engine (`lib/kinetic/engine.ts`, byte-identical on the
+  server) with fonts from `client/public/fonts/`. `workerFonts.ts` checks the font fingerprints
+  against the server's.
+- *All other templates* (DOM/CSS + framer-motion in the preview) go through a layout compiler, so
+  the export matches the live preview rather than the older ASS/PNG approximations:
+  - [`layout/compile.tsx`](client/src/lib/export/layout/compile.tsx) renders the real
+    `CaptionWords` off-screen at a 720 px reference long edge and reads the resulting geometry
+    and computed styles for each caption state (karaoke / reveal steps). That covers glyph runs,
+    strokes, shadows, gradients, decorations, boxes and backdrop blur, plus CSS keyframes and
+    framer variants.
+  - The output is a `LayoutTrack`.
+  - `layout/fontSources.ts` resolves the Google Fonts woff2 files the preview used.
+  - [`layout/painter.ts`](client/src/lib/export/layout/painter.ts) replays the track on the
+    worker's OffscreenCanvas at any output size.
+  - Very long karaoke videos take a few seconds of "Preparing captions…" before rendering starts.
+- *Text behind person*: [`personMatte.ts`](client/src/lib/export/personMatte.ts) runs MediaPipe
+  selfie segmentation inside the export worker, only for frames inside caption windows
+  (`[start−0.25 s, end+0.6 s]`), and draws the person over the captions. Edge quality matches the
+  editor preview. The Python RVM matte service is used only by server-rendered exports.
+  Whether a matte is needed is decided by [`behindWindows.ts`](client/src/lib/export/behindWindows.ts),
+  which has no MediaPipe code: every other export (all simple templates, and kinetic templates
+  with the effect off) never loads the segmenter code, WASM or model. When it is needed, the worker
+  loads it alongside the font and video preparation rather than before them. The editor preview
+  likewise imports its segmenter only once the toggle is on.
+
+**Verification.**
+- `npm run test:parity` — kinetic, browser vs server.
+- `npm run test:layout-parity` — every DOM template: live preview vs export painter, centroid
+  shift ≤ 1.5 px and ink within 10%.
+- `src/scripts/_device-export-api-check.ts` and `_audio-upload-api-check.ts` — in-memory Mongo.
+- Dev-only pages: `/dev/export` (render any template from a picked file), `/dev/caption-layout`
+  (preview vs painter), `/dev/matte`, `/dev/local-media`.
+
 ## Export (burned-in video / SRT / JSON)
+
+The ffmpeg renderer below is the **fallback** for devices that can't render locally (e.g. no
+WebCodecs, HEVC without a decoder, Firefox Android). For DOM templates it still uses its own ASS/PNG
+renderers, so a server render can differ slightly from the preview.
 
 [`export.service.ts`](server/src/services/export.service.ts) is the second renderer of the same
 style/caption data the editor previews — by design, it's built to produce **pixel-identical**
@@ -497,6 +654,49 @@ pixel-compares the browser and server renders of the kinetic templates.
 repeatable job, or a plain `setInterval` in the in-process fallback) and deletes: expired export
 files (`EXPORT_TTL_HOURS`, default 24h), old extracted audio (`AUDIO_TTL_DAYS`, default 7d), old
 finished videos (`VIDEO_TTL_DAYS`, default 30d), and orphaned chunk files older than an hour.
+Independently of the sweep, any completed export (device or server) releases the project's server
+source video, audio, preview and masks at once (`releaseServerSource` in `export.service.ts`).
+
+## Admin console: plans and templates
+
+**The free trial is not a plan.** Every account starts on the plan document with slug `starter`
+(`TRIAL_PLAN_SLUG` in [`Plan.ts`](server/src/models/Plan.ts)) — an internal id only; every
+screen calls it "Free trial". Sign-up and an admin moving someone to the trial create **no**
+`Subscription` row (`assignPlanToUser`). Older accounts still have an "active" free-trial row from
+before this, so every admin count and list filters by plan instead
+([`planStats.service.ts`](server/src/services/planStats.service.ts)):
+
+- **Active plan** = a subscription on a plan other than the trial, status `active` **and**
+  `currentPeriodEnd` in the future. Nothing flips the status when a period runs out, so an
+  "active" row with a past end date is shown as expired.
+- **MRR** = active recurring plans at list price (yearly = `priceYearlyPkr` per month); one-time
+  passes are not recurring. **Plan sales** = list price of plans bought or given in the period.
+- Users list shows the plan's name, "Free trial", or "*Plan* (ended)", and filters by those.
+
+**Dashboard / Analytics charts** (`GET /admin/stats/charts?days=`) are computed live from users,
+projects and subscriptions, grouped by day in Pakistan time — sign-ups, creators uploading,
+uploads, exports, video minutes, plan sales, and active plans per day. Plain SVG
+([`Charts.tsx`](client/src/components/admin/Charts.tsx)); ranges over 90 days are shown weekly.
+Admin dropdowns use [`AdminSelect`](client/src/components/admin/AdminSelect.tsx) (the native select
+menu can't be themed) and apply filters immediately.
+
+**Templates page** (`/admin/templates`):
+
+- **Export log** — [`ExportEvent`](server/src/models/ExportEvent.ts), one row per finished export
+  (device: `completeDeviceExport`; server: `runExportJob`) with creator, project name (kept after
+  the project is deleted), picker card key, renderer template, quality, format and length. The
+  editor sends the key it applied, or matches an older project's look to a card
+  (`matchTemplateKey`); `""` = a custom look.
+- **Top 10** — exports per card in the period (`templateUsageStats`), with creators and videos.
+- **Older exports** — projects exported before the log existed are listed (grouped by look) to
+  admins; the page matches each look to a card and logs them once (`POST /admin/templates/backfill`,
+  marked "from before the log", one row per project).
+- **Template order** — drag or arrow cards, show/hide them; saved to
+  `SystemConfig.templateLayout` (`PUT /admin/templates/layout`, admin only) and served to every
+  editor through `/billing/flags`. Cards added to the code later follow the saved order in catalog
+  order (`arrangeTemplates`). Never rename a card key: the log and projects store it.
+
+Checks: `npx tsx src/scripts/_admin-plans-templates-check.ts` in `server/` (in-memory Mongo).
 
 ## Configuration reference
 
@@ -512,9 +712,14 @@ All in [`server/.env`](server/.env) / [`server/src/config.ts`](server/src/config
 | `MAX_VIDEO_SIZE_BYTES` | 1GB | Hard upload cap |
 | `CHUNK_SIZE_BYTES` | 10MB | Size of each resumable upload chunk |
 | `FAST_UPLOAD_THRESHOLD_BYTES` | 100MB | Below this, single-shot upload instead of chunked |
-| `SINGLE_CALL_MAX_DURATION_SEC` | 1200s (20min) | Audio at or under this length goes to Deepgram in one request — no split, no VAD. `0` = always use the chunked path below |
-| `SINGLE_CALL_TIMEOUT_MS` | 1,200,000 (20min) | Abort timeout for that single whole-file request |
-| `AUDIO_CHUNK_DURATION` | 300s | Chunk window for the **chunked fallback path only** (videos over `SINGLE_CALL_MAX_DURATION_SEC`) |
+| `SINGLE_CALL_MAX_DURATION_SEC` | 10800s (3h) | Audio at or under this length goes to Deepgram in one request, falling back to chunks on a timeout/5xx/network error. `0` = always use the chunked path |
+| `SINGLE_CALL_TIMEOUT_MS` | 660,000 (11min) | Abort timeout for the whole-file request — just above Deepgram's 10-minute limit |
+| `DEEPGRAM_URDU_LANGUAGE` | `ur` | Deepgram language code sent for Urdu (`hi` = old Devanagari mapping) |
+| `DEEPGRAM_AUTO_MODE` | `detect` | What "Auto" sends: `detect` = Deepgram's language detection, `multi` = its multilingual model |
+| `DEEPGRAM_SMART_FORMAT` | `true` | Numbers, dates and currency as digits |
+| `DEEPGRAM_TAG` | `asaancaption` | Label on every Deepgram request |
+| `GAP_FILL_MIN_CONFIDENCE` | 0.55 | Gap-fill results below this mean word confidence are discarded |
+| `AUDIO_CHUNK_DURATION` | 300s | Chunk window for audio over `SINGLE_CALL_MAX_DURATION_SEC` and for the whole-file fallback |
 | `AUDIO_CHUNK_OVERLAP` | 1.5s | Overlap between transcription chunks (chunked path only) |
 | `AUDIO_BITRATE` | 64k | Compressed audio bitrate sent to Deepgram |
 | `SAFE_CHUNK_MB` | ~2GB | Re-split threshold for the chunked path — Deepgram's request limit, rarely hit given `AUDIO_CHUNK_DURATION` |
@@ -577,7 +782,7 @@ docker compose up -d     # optional: real Mongo + Redis instead of memory fallba
 npm run dev              # runs server (tsx watch) + client (vite) concurrently
 ```
 
-- Client: http://localhost:5173 · API: http://localhost:4000 · Health: `/api/health`
+- Client: http://localhost:5610 · API: http://localhost:4610 · Health: `/api/health`
 - `server/src/scripts/smoke-test.ts` (`npm run test:smoke` in `server/`) — pure-function smoke
   tests for caption grouping and chunk-merge math, no network calls.
 - `server/scripts/download-fonts.mjs` (`npm run fonts:download` in `server/`) — pulls the TTFs the
@@ -586,4 +791,9 @@ npm run dev              # runs server (tsx watch) + client (vite) concurrently
   editing it (the smoke test fails if the two copies drift).
 - `npm run test:parity` in `server/` (`npx playwright install chromium` once) — browser-vs-server
   pixel parity of the kinetic templates.
+- `npm run test:layout-parity` in `server/` (needs Google Chrome) — live preview vs on-device
+  export painter for every DOM template; images in `server/test-out/layout-parity/`.
+- `npm run fonts:sync` in `server/` — copies `server/fonts/*.ttf` to `client/public/fonts/`
+  (the on-device export loads them from there; `test:smoke` fails if they drift).
+- Dev-only client pages: `/dev/export`, `/dev/caption-layout`, `/dev/matte`, `/dev/local-media`.
 - `segmentation/` — optional Python service for text-behind-person (see its README).

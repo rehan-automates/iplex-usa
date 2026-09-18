@@ -4,8 +4,8 @@
  *
  *   npm run dev           (from this folder; same as `node dev.mjs`)
  *
- *   server  API            http://localhost:<PORT in server/.env, default 4100>
- *   client  editor         http://localhost:5173
+ *   server  API            http://localhost:<PORT in server/.env, default 4610>
+ *   client  editor         http://localhost:5610
  *   matte   person matte   host:port of SEGMENT_SERVICE_URL in server/.env.
  *                          Optional: skipped, never fatal, when that is empty,
  *                          segmentation/.venv is missing or its port is taken.
@@ -52,7 +52,7 @@ function readEnvFile(file) {
 }
 
 const serverEnv = readEnvFile(path.join(ROOT, 'server', '.env'));
-const apiPort = Number(serverEnv.PORT) || 4100;
+const apiPort = Number(serverEnv.PORT) || 4610;
 
 /**
  * The ffmpeg/ffprobe the server bundles. The matte must be decoded frame for
@@ -96,8 +96,8 @@ function buildServices() {
       command: process.execPath,
       args: [vite],
       host: 'localhost',
-      port: 5173,
-      url: 'http://localhost:5173',
+      port: 5610,
+      url: 'http://localhost:5610',
     });
   } else problems.push('client/node_modules is missing: run `npm run install:all` in this folder.');
 
@@ -404,7 +404,7 @@ const ready = await Promise.all(
 );
 
 if (!stopping && ready.every(Boolean)) {
-  say(`${colour(32, 'all services up.')} Open http://localhost:5173 — Ctrl+C stops everything.`);
+  say(`${colour(32, 'all services up.')} Open http://localhost:5610 — Ctrl+C stops everything.`);
   const stopAfter = Number(process.env.CAPTIONFLOW_DEV_STOP_AFTER_READY_MS);
   if (stopAfter > 0) setTimeout(() => void stopAll(0), stopAfter);
 }
