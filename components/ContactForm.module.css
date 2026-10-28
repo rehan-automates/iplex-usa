@@ -1,0 +1,165 @@
+.form {
+  position: relative;
+  width: 620px;
+  height: 718px;
+  border: 1px solid #34343a;
+  border-radius: 12px;
+  background: #1a1a1d;
+}
+
+.field {
+  position: absolute;
+  left: 23px;
+  display: block;
+  width: 572px;
+  height: 84px;
+}
+
+.field > span {
+  display: block;
+  height: 24px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .96px;
+  line-height: 14.4px;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #34343a;
+  border-radius: 8px;
+  outline: 0;
+  background: #010004;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -.36px;
+}
+
+.field input,
+.field select {
+  height: 60px;
+  padding: 0 23px;
+  line-height: 60px;
+}
+
+.field select {
+  padding-right: 66px;
+  color: #a8a8a8;
+  cursor: pointer;
+}
+
+.field textarea {
+  height: 100px;
+  padding: 14px 23px;
+  line-height: 25.2px;
+  resize: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #a8a8a8;
+  opacity: 1;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #707078;
+}
+
+.name { top: 23px; }
+.email { top: 139px; }
+.company { top: 256px; }
+.budget { top: 372px; }
+.message { top: 489px; height: 124px; }
+
+.consent {
+  position: absolute;
+  top: 644px;
+  left: 23px;
+  width: 331px;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.consent a {
+  color: #fff;
+}
+
+.submit {
+  position: absolute;
+  top: 645px;
+  right: 23px;
+  width: 229px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background: #fff;
+  color: #010004;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -.28px;
+  line-height: 14px;
+  transition: background-color .2s ease;
+}
+
+.submit:hover {
+  background: #e5e5e7;
+}
+
+@media (max-width: 1279px) {
+  .form {
+    width: 100%;
+  }
+
+  .field {
+    width: calc(100% - 46px);
+  }
+
+  .submit {
+    width: min(229px, calc(42% - 23px));
+  }
+
+  .consent {
+    width: min(331px, calc(58% - 30px));
+  }
+}
+
+@media (max-width: 600px) {
+  .form {
+    height: 790px;
+  }
+
+  .field {
+    left: 19px;
+    width: calc(100% - 38px);
+  }
+
+  .name { top: 23px; }
+  .email { top: 139px; }
+  .company { top: 255px; }
+  .budget { top: 371px; }
+  .message { top: 487px; }
+
+  .consent {
+    top: 640px;
+    left: 19px;
+    width: calc(100% - 38px);
+  }
+
+  .submit {
+    top: 715px;
+    right: 19px;
+    left: 19px;
+    width: calc(100% - 38px);
+  }
+}

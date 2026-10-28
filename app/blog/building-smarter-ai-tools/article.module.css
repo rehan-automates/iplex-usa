@@ -1,0 +1,354 @@
+.page {
+  display: flow-root;
+  padding-bottom: 31px;
+}
+
+.article {
+  position: relative;
+  width: 1005px;
+  height: 2583px;
+  margin: 130px auto 0;
+}
+
+.articleHeader {
+  width: 1000px;
+  height: 206px;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  height: 14px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), monospace;
+  font-size: 12px;
+  letter-spacing: .96px;
+  line-height: 14.4px;
+}
+
+.articleHeader h1 {
+  width: 755px;
+  margin-top: 16px;
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -2.8px;
+  line-height: 56px;
+}
+
+.hero {
+  position: absolute;
+  top: 190px;
+  left: 0;
+  width: 1000px;
+  height: 605px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.body {
+  position: absolute;
+  top: 848px;
+  left: 0;
+  width: 1005px;
+  height: 1735px;
+}
+
+.body h2,
+.body h3,
+.body p,
+.body ul {
+  position: absolute;
+  left: 0;
+  margin: 0;
+}
+
+.body h2 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -1.4px;
+  line-height: 39.2px;
+}
+
+.body h3 {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  line-height: 28px;
+}
+
+.body p,
+.body ul {
+  width: 100%;
+  color: #a8a8a8;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.body strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.body ul {
+  padding-left: 21px;
+}
+
+.introductionHeading { top: 0; }
+.introductionOne { top: 51px; }
+.introductionTwo { top: 117px; }
+.introductionThree { top: 183px; }
+.announcementHeading { top: 289px; }
+.innovationHeading { top: 360px; }
+.innovationText { top: 400px; }
+.focusLead { top: 479px; }
+.focusList { top: 502px; }
+.developmentHeading { top: 635px; }
+.workflowHeading { top: 706px; }
+.workflowText { top: 746px; }
+.workflowLead { top: 825px; }
+.workflowList { top: 848px; }
+.workflowClose { top: 949px; }
+.productivityHeading { top: 1026px; }
+.productivityOne { top: 1066px; }
+.productivityTwo { top: 1132px; }
+.aheadHeading { top: 1207px; }
+.visionHeading { top: 1278px; }
+.visionOne { top: 1318px; }
+.visionTwo { top: 1376px; }
+.collaborationHeading { top: 1442px; }
+.collaborationText { top: 1482px; }
+.finalHeading { top: 1559px; }
+.finalText { top: 1610px; }
+
+.related {
+  width: 1240px;
+  height: 466px;
+  margin: 108px auto 0;
+}
+
+.relatedHeader {
+  position: relative;
+  height: 91px;
+}
+
+.relatedHeader h2 {
+  position: absolute;
+  top: 43px;
+  left: 0;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.more {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 120px;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid #34343a;
+  border-radius: 8px;
+  background: #1a1a1d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.more svg {
+  width: 18px;
+  height: 18px;
+  color: #a8a8a8;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 397px);
+  gap: 38px;
+  margin-top: 40px;
+}
+
+.relatedGrid :global(.blog-card) {
+  width: 397px;
+  min-height: 335px;
+}
+
+.relatedGrid :global(.blog-card-media-link) {
+  height: 223px;
+}
+
+.relatedGrid :global(.blog-card-copy) {
+  margin-top: 24px;
+}
+
+.relatedGrid :global(.blog-card-title) {
+  margin-top: 14px;
+}
+
+.page > :global(.site-footer) {
+  margin-top: 177px;
+}
+
+@media (max-width: 1280px) {
+  .article {
+    width: calc(100% - 40px);
+  }
+
+  .articleHeader,
+  .hero,
+  .body {
+    width: 100%;
+  }
+
+  .related {
+    width: calc(100% - 40px);
+  }
+
+  .relatedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .relatedGrid :global(.blog-card) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 40px;
+  }
+
+  .article {
+    width: calc(100% - 32px);
+    height: auto;
+    margin-top: 108px;
+  }
+
+  .articleHeader {
+    height: auto;
+  }
+
+  .articleHeader h1 {
+    width: 100%;
+    font-size: clamp(40px, 11vw, 56px);
+    letter-spacing: -2.4px;
+    line-height: 1;
+  }
+
+  .hero {
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: min(75vw, 520px);
+    margin-top: 50px;
+  }
+
+  .body {
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: auto;
+    margin-top: 52px;
+  }
+
+  .body h2,
+  .body h3,
+  .body p,
+  .body ul {
+    position: static;
+  }
+
+  .body h2 {
+    margin-top: 54px;
+  }
+
+  .body h2:first-child {
+    margin-top: 0;
+  }
+
+  .body h3 {
+    margin-top: 26px;
+  }
+
+  .body p {
+    margin-top: 14px;
+  }
+
+  .body ul {
+    margin-top: 10px;
+  }
+
+  .related {
+    width: calc(100% - 32px);
+    height: auto;
+    margin-top: 120px;
+  }
+
+  .relatedHeader {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    height: auto;
+  }
+
+  .relatedHeader h2,
+  .more {
+    position: static;
+  }
+
+  .relatedHeader h2 {
+    font-size: 38px;
+    letter-spacing: -1.9px;
+    line-height: 1;
+  }
+
+  .more {
+    flex: 0 0 112px;
+  }
+
+  .relatedGrid {
+    grid-template-columns: 1fr;
+    gap: 58px;
+    margin-top: 48px;
+  }
+
+  .relatedGrid :global(.blog-card) {
+    width: 100%;
+  }
+
+  .relatedGrid :global(.blog-card-media-link) {
+    height: min(58vw, 320px);
+  }
+
+  .page > :global(.site-footer) {
+    margin-top: 130px;
+  }
+}
+
+@media (max-width: 360px) {
+  .relatedHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .relatedHeader h2 {
+    font-size: 34px;
+  }
+
+  .more {
+    margin-top: 22px;
+  }
+
+  .relatedGrid {
+    margin-top: 42px;
+  }
+}

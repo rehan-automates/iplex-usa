@@ -1,0 +1,581 @@
+.page {
+  padding-bottom: 73px;
+}
+
+.hero {
+  position: relative;
+  height: 900px;
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(1, 0, 4, .1) 0%, rgba(1, 0, 4, .08) 48%, rgba(1, 0, 4, .34) 72%, #010004 100%),
+    linear-gradient(90deg, rgba(1, 0, 4, .18), transparent 56%, rgba(1, 0, 4, .12));
+}
+
+.heroContent {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 89px;
+  left: 0;
+}
+
+.heroContent :global(.eyebrow) {
+  height: 24px;
+  margin: 0 0 7px 10px;
+  padding-top: 6px;
+  color: #d4d4d8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 1.1px;
+  line-height: 12px;
+}
+
+.heroContent h1 {
+  width: 725px;
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -2.8px;
+  line-height: 56px;
+}
+
+.featureSection {
+  height: 769px;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: 588px 588px;
+  gap: 64px;
+  height: 100%;
+  padding-top: 100px;
+}
+
+.featureCopy {
+  margin-top: 100px;
+}
+
+.featureCopy :global(.micro-label) {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  color: #fff;
+}
+
+.featureCopy h2 {
+  margin-top: 1px;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.featureImageFrame {
+  width: 588px;
+  height: 569px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px #25252a;
+}
+
+.featureImageTall {
+  width: 588px;
+  height: 769px;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.approachText {
+  margin-top: 31px;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.approachText p:first-child {
+  width: 526px;
+}
+
+.approachText p + p {
+  margin-top: 12px;
+}
+
+.featureList {
+  display: grid;
+  gap: 8px;
+  margin: 25px 0 0;
+  padding: 0;
+  color: #a8a8a8;
+  font-size: 14px;
+  letter-spacing: -.28px;
+  line-height: 16.8px;
+  list-style: none;
+}
+
+.featureList li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.featureList li::before {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #323135;
+  content: "";
+}
+
+.results .featureCopy {
+  margin-top: 102px;
+}
+
+.resultsText {
+  margin-top: 31px;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.featureStats {
+  display: grid;
+  grid-template-columns: repeat(2, 282px);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.featureStats > div {
+  display: grid;
+}
+
+.featureStats strong {
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -1.92px;
+  line-height: 48px;
+}
+
+.featureStats span {
+  margin-top: 11px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: .72px;
+  line-height: 14.4px;
+  text-transform: uppercase;
+}
+
+.valuesSection {
+  height: 610px;
+  padding-top: 100px;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 310px);
+  height: 410px;
+}
+
+.valueCard {
+  position: relative;
+  height: 410px;
+  border: 1px solid #2c2c31;
+}
+
+.valueCard + .valueCard {
+  border-left: 0;
+}
+
+.valueIcon {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 64px;
+  height: 64px;
+  color: #fff;
+}
+
+.valueIcon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.valueCopy {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+}
+
+.valueCopy h3 {
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: -1.28px;
+  line-height: 38.4px;
+}
+
+.valueCopy p {
+  margin-top: 17px;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.achievementsSection {
+  height: 820px;
+  padding-top: 100px;
+}
+
+.achievementsGrid {
+  display: grid;
+  grid-template-columns: 300px 830px;
+  gap: 110px;
+  height: 620px;
+}
+
+.achievementsList {
+  display: grid;
+  align-self: start;
+  grid-template-rows: repeat(4, 115px);
+  margin-top: 79px;
+}
+
+.achievement {
+  display: grid;
+  grid-template-columns: 70px 166px;
+  gap: 16px;
+  height: 115px;
+  padding: 24px;
+}
+
+.achievement strong {
+  justify-self: center;
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: -2.24px;
+  line-height: 67.2px;
+}
+
+.achievement > div {
+  display: grid;
+  align-content: start;
+  padding-top: 7px;
+}
+
+.achievement b {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 38.4px;
+}
+
+.achievement span {
+  margin-top: -2px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: .72px;
+  line-height: 14.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.achievementImageFrame {
+  width: 830px;
+  height: 620px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px #25252a;
+}
+
+.achievementImage {
+  width: 831px;
+  height: 820px;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.quoteSection {
+  height: 557px;
+  padding-top: 100px;
+}
+
+.quoteInner {
+  display: grid;
+  grid-template-columns: 498px 348px;
+  gap: 24px;
+  width: 870px;
+  height: 430px;
+  margin-inline: auto;
+}
+
+.quoteCopy {
+  display: flex;
+  flex-direction: column;
+  height: 417px;
+  margin-top: 6px;
+}
+
+.quoteMark {
+  width: 42px;
+  height: 40px;
+  font-family: Georgia, serif;
+  font-size: 68px;
+  line-height: 68px;
+  transform: translateY(-13px);
+}
+
+.quoteCopy blockquote {
+  margin-top: 17px;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.quoteAttribution {
+  margin-top: auto;
+}
+
+.quoteAttribution p {
+  font-size: 18px;
+  letter-spacing: -.36px;
+  line-height: 21.6px;
+}
+
+.quoteAttribution span {
+  display: block;
+  margin-top: 1px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: .72px;
+  line-height: 14.4px;
+  text-transform: uppercase;
+}
+
+.portraitFrame {
+  position: relative;
+  width: 348px;
+  height: 430px;
+  overflow: hidden;
+}
+
+.portrait {
+  width: 348px;
+  height: 430px;
+  object-fit: cover;
+}
+
+.portraitShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 70%, rgba(1, 0, 4, .28));
+}
+
+.page > :global(.site-footer) {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding-bottom: 32px;
+  }
+
+  .hero {
+    height: 720px;
+  }
+
+  .heroImage {
+    object-position: 58% center;
+  }
+
+  .heroContent {
+    bottom: 70px;
+  }
+
+  .heroContent :global(.eyebrow) {
+    margin-left: 0;
+    font-size: 10px;
+  }
+
+  .heroContent h1 {
+    width: 100%;
+    font-size: clamp(40px, 11vw, 52px);
+    letter-spacing: -2px;
+    line-height: 1.03;
+  }
+
+  .featureSection {
+    height: auto;
+    padding: 88px 0;
+  }
+
+  .featureGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    height: auto;
+    padding-top: 0;
+  }
+
+  .results .featureGrid {
+    flex-direction: column-reverse;
+  }
+
+  .featureCopy,
+  .results .featureCopy {
+    margin-top: 0;
+  }
+
+  .featureCopy h2 {
+    margin-top: 10px;
+    font-size: 39px;
+    letter-spacing: -1.8px;
+    line-height: 1.05;
+  }
+
+  .featureCopy h2 br,
+  .resultsText br,
+  .valueCopy br {
+    display: none;
+  }
+
+  .approachText p:first-child {
+    width: auto;
+  }
+
+  .featureImageFrame {
+    width: 100%;
+    height: min(112vw, 520px);
+  }
+
+  .featureImageTall {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .featureStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .featureStats span {
+    font-size: 10px;
+  }
+
+  .valuesSection {
+    height: auto;
+    padding: 72px 0;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .valueCard {
+    height: 320px;
+  }
+
+  .valueCard + .valueCard {
+    border-top: 0;
+    border-left: 1px solid #2c2c31;
+  }
+
+  .valueCopy h3 {
+    font-size: 30px;
+    line-height: 1.15;
+  }
+
+  .achievementsSection {
+    height: auto;
+    padding: 72px 0;
+  }
+
+  .achievementsGrid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    height: auto;
+  }
+
+  .achievementsList {
+    grid-template-rows: repeat(4, 105px);
+    margin-top: 0;
+  }
+
+  .achievement {
+    grid-template-columns: 110px 1fr;
+    height: 105px;
+    padding: 18px 10px;
+  }
+
+  .achievementImageFrame {
+    width: 100%;
+    height: min(82vw, 500px);
+  }
+
+  .achievementImage {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .quoteSection {
+    height: auto;
+    padding: 88px 16px 0;
+  }
+
+  .quoteInner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    width: 100%;
+    height: auto;
+  }
+
+  .quoteCopy {
+    height: auto;
+    min-height: 540px;
+    margin-top: 0;
+  }
+
+  .quoteCopy blockquote {
+    font-size: 39px;
+    letter-spacing: -1.8px;
+    line-height: 1.05;
+  }
+
+  .quoteCopy blockquote br {
+    display: none;
+  }
+
+  .portraitFrame {
+    width: 100%;
+    height: min(118vw, 540px);
+  }
+
+  .portrait {
+    width: 100%;
+    height: 100%;
+  }
+
+  .page > :global(.site-cta) {
+    margin-top: 88px;
+  }
+}

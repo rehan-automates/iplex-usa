@@ -1,0 +1,105 @@
+.page {
+  display: flow-root;
+  padding-bottom: 38px;
+}
+
+.intro {
+  width: 629px;
+  height: 222px;
+  margin: 115px auto 0;
+  text-align: center;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  color: #d4d4d8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .96px;
+  line-height: 12px;
+}
+
+.intro h1 {
+  width: 480px;
+  margin: 8px auto 0;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.description {
+  width: 602px;
+  margin: 24px auto 0;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.workList {
+  display: grid;
+  gap: 120px;
+  width: min(1240px, calc(100% - 40px));
+  height: 2400px;
+  margin: 0 auto;
+}
+
+.workList :global(.work-card) {
+  position: relative;
+  top: auto;
+}
+
+.cta {
+  margin-top: 105px;
+}
+
+.page > :global(.site-footer) {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 48px;
+  }
+
+  .intro {
+    width: calc(100% - 32px);
+    height: auto;
+    margin-top: 104px;
+  }
+
+  .intro h1 {
+    width: 100%;
+    margin-top: 12px;
+    font-size: 40px;
+    letter-spacing: -2px;
+    line-height: 42px;
+  }
+
+  .description {
+    width: 100%;
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .workList {
+    gap: 28px;
+    width: calc(100% - 32px);
+    height: auto;
+    margin-top: 56px;
+  }
+
+  .cta {
+    margin-top: 80px;
+  }
+
+  .page > :global(.site-footer) {
+    margin-top: 70px;
+  }
+}

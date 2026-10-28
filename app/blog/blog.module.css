@@ -1,0 +1,141 @@
+.page {
+  display: flow-root;
+  padding-bottom: 25px;
+}
+
+.heading {
+  width: 629px;
+  height: 222px;
+  margin: 115px auto 0;
+  text-align: center;
+}
+
+.eyebrow {
+  height: 24px;
+  color: #fff;
+  font-family: var(--font-geist-mono, Consolas), monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .96px;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.heading h1 {
+  width: 520px;
+  margin: 8px auto 0;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.description {
+  width: 602px;
+  margin: 24px auto 0;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 397px);
+  column-gap: 38px;
+  row-gap: 37px;
+  width: 1267px;
+  margin: 34px 0 0 calc((100% - 1294px) / 2);
+}
+
+.grid :global(.blog-card) {
+  width: 397px;
+  min-height: 348px;
+}
+
+.grid :global(.blog-card-media-link) {
+  height: 223px;
+  border-color: #24262b;
+}
+
+.grid :global(.blog-card-copy) {
+  margin-top: 37px;
+}
+
+.grid :global(.blog-card-meta) {
+  gap: 7px;
+  color: #a8a8a8;
+  font-size: 12px;
+  letter-spacing: .96px;
+  line-height: 14.4px;
+}
+
+.grid :global(.blog-card-title) {
+  margin-top: 14px;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -1.2px;
+  line-height: 28.8px;
+}
+
+.page > :global(.site-footer) {
+  margin-top: 201px;
+}
+
+@media (max-width: 1320px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 38px;
+    width: calc(100% - 40px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .grid :global(.blog-card) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 40px;
+  }
+
+  .heading {
+    width: calc(100% - 32px);
+    height: auto;
+    margin-top: 112px;
+  }
+
+  .heading h1 {
+    width: min(520px, 100%);
+    font-size: clamp(40px, 11vw, 48px);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .description {
+    width: min(602px, 100%);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    row-gap: 60px;
+    width: calc(100% - 32px);
+    margin-top: 72px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .grid :global(.blog-card-media-link) {
+    height: min(58vw, 320px);
+  }
+
+  .grid :global(.blog-card-copy) {
+    margin-top: 28px;
+  }
+
+  .page > :global(.site-footer) {
+    margin-top: 130px;
+  }
+}

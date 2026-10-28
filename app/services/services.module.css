@@ -1,0 +1,269 @@
+.page {
+  display: flow-root;
+  padding-bottom: 37px;
+}
+
+.intro {
+  width: 629px;
+  height: 222px;
+  margin: 124px auto 0;
+  text-align: center;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  color: #d4d4d8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .96px;
+  line-height: 12px;
+}
+
+.intro h1 {
+  width: 480px;
+  margin: 8px auto 0;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 48px;
+}
+
+.introDescription {
+  width: 602px;
+  margin: 24px auto 0;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.servicesList {
+  display: grid;
+  gap: 24px;
+  width: 803px;
+  margin: 50px auto 0;
+}
+
+.serviceCard {
+  display: grid;
+  grid-template-columns: 427px 278px;
+  gap: 32px;
+  width: 803px;
+  height: 344px;
+  padding: 33px;
+  border: 1px solid #24262b;
+  border-radius: 16px;
+  background: #131416;
+}
+
+.serviceCardTall {
+  grid-template-columns: 395px 310px;
+  height: 376px;
+}
+
+.serviceCopy {
+  position: relative;
+  min-width: 0;
+  height: 278px;
+}
+
+.serviceCardTall .serviceCopy {
+  height: 310px;
+}
+
+.serviceNumber {
+  height: 16px;
+  color: #a3a3a3;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -.12px;
+  line-height: 16px;
+}
+
+.serviceCopy h2 {
+  margin-top: 11px;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -1.12px;
+  line-height: 32px;
+}
+
+.serviceDescription {
+  margin-top: 11px;
+  color: #a8a8a8;
+  font-size: 14px;
+  letter-spacing: -.28px;
+  line-height: 22.75px;
+}
+
+.deliverables {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 151px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deliverables li {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  border-top: 1px solid #2b2d31;
+  color: #d4d4d4;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .55px;
+  line-height: 16.5px;
+}
+
+.deliverables li:last-child {
+  height: 37px;
+}
+
+.serviceImage {
+  position: relative;
+  width: 278px;
+  height: 278px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #171717;
+}
+
+.serviceCardTall .serviceImage {
+  width: 310px;
+  height: 310px;
+}
+
+.serviceImage img {
+  object-fit: cover;
+}
+
+.cta {
+  margin-top: 80px;
+}
+
+.page > :global(.site-footer) {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding-bottom: 48px;
+  }
+
+  .intro {
+    width: calc(100% - 40px);
+    height: auto;
+    margin-top: 112px;
+  }
+
+  .intro h1 {
+    width: min(480px, 100%);
+    font-size: clamp(40px, 8vw, 48px);
+    line-height: 1;
+  }
+
+  .introDescription {
+    width: min(602px, 100%);
+  }
+
+  .servicesList {
+    width: calc(100% - 40px);
+    max-width: 803px;
+    margin-top: 56px;
+  }
+
+  .serviceCard,
+  .serviceCardTall {
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 310px);
+    width: 100%;
+  }
+
+  .serviceImage,
+  .serviceCardTall .serviceImage {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .intro {
+    margin-top: 104px;
+  }
+
+  .intro h1 {
+    margin-top: 12px;
+    font-size: 40px;
+    letter-spacing: -2px;
+    line-height: 42px;
+  }
+
+  .introDescription {
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .servicesList {
+    gap: 20px;
+    width: calc(100% - 32px);
+    margin-top: 48px;
+  }
+
+  .serviceCard,
+  .serviceCardTall {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    height: auto;
+    padding: 28px;
+  }
+
+  .serviceCopy,
+  .serviceCardTall .serviceCopy {
+    height: 310px;
+  }
+
+  .serviceCopy h2 {
+    font-size: 27px;
+  }
+
+  .serviceImage,
+  .serviceCardTall .serviceImage {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .cta {
+    margin-top: 80px;
+  }
+
+  .page > :global(.site-footer) {
+    margin-top: 70px;
+  }
+}
+
+@media (max-width: 420px) {
+  .serviceCard,
+  .serviceCardTall {
+    padding: 22px;
+  }
+
+  .serviceCopy h2 {
+    font-size: 25px;
+    line-height: 30px;
+  }
+
+  .deliverables li {
+    font-size: 10px;
+    letter-spacing: .25px;
+  }
+}
