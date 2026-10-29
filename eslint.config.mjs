@@ -10,6 +10,7 @@ export default defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "iplex-site/**",
     ".figma-source/**",
     ".figma-reference/**",
     "tmp/webgl-validation/**",

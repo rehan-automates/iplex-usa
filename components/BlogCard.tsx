@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { dateAttr, formatDate, resolveBlogPost, type BlogPost } from "@/lib/content";
 
-import { DraftBadge } from "./DraftBadge";
 
 export type BlogCardProps = {
   post: BlogPost;
@@ -24,7 +23,6 @@ export function BlogCard({ post }: BlogCardProps) {
           <span>{entry.category}</span>
           <span aria-hidden="true">•</span>
           <time dateTime={dateAttr(entry.date)}>{formatDate(entry.date)}</time>
-          {entry.draft ? <DraftBadge /> : null}
         </p>
         <h3 className="blog-card-title">
           <Link href={href}>{entry.title}</Link>

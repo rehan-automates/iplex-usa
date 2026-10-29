@@ -7,7 +7,6 @@ import { notFound } from "next/navigation";
 import { ArrowIcon } from "@/components/ArrowIcon";
 import { ArticleBody } from "@/components/ArticleBody";
 import { BlogCard } from "@/components/BlogCard";
-import { DraftBadge } from "@/components/DraftBadge";
 import { PageShell } from "@/components/PageShell";
 import {
   blogPosts,
@@ -62,7 +61,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span>{post.category}</span>
             <span aria-hidden="true">•</span>
             <time dateTime={dateAttr(post.date)}>{formatDate(post.date, "short")}</time>
-            {post.draft ? <DraftBadge /> : null}
           </p>
           <h1>{post.title}</h1>
         </header>

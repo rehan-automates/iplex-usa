@@ -161,8 +161,6 @@ export const workProjects: readonly CaseStudy[] = [
     },
   },
   {
-    // Draft: no case-study page written yet. The fields below are the existing card copy.
-    draft: true,
     slug: "native-ai-copilot",
     title: "Embedding a Native AI Co-Pilot Into a B2B Product — Without Slowing the Roadmap",
     year: "2026",
@@ -171,16 +169,40 @@ export const workProjects: readonly CaseStudy[] = [
       "A Series A startup needed to ship AI features fast — their competitors already had them. Our team designed, built, and shipped a native LLM-powered co-pilot in 6 weeks, integrated cleanly into their existing codebase with zero regressions.",
     cardImage: ASSETS.workAiProduct,
     cardImageLayout: "desktop-screen",
+    industry: "B2B Software",
+    client: { name: "B2B Software", logo: "" },
+    services: ["AI Co-Pilot Development", "Product Engineering", "LLM Integration"],
+    hero: {
+      image: ASSETS.workAiProduct,
+      backdrop: ASSETS.workAiProductBackdrop,
+      alt: "AI-powered product interface with a live conversation and lead insights",
+    },
+    challenge: {
+      quote: "A Series A startup needed to ship AI features fast while keeping its existing product roadmap moving.",
+    },
+    approach: {
+      heading: "Building AI Into the Existing Product",
+      paragraphs: [
+        "Our team designed, built, and shipped a native LLM-powered co-pilot within the existing codebase.",
+        "The integration supported the product roadmap while bringing AI capabilities directly into the user experience.",
+      ],
+      image: { src: ASSETS.workAiProduct, alt: "Native AI product experience" },
+    },
     results: {
+      heading: "From Concept to Shipped Feature in Six Weeks",
+      text: "The co-pilot shipped in six weeks with zero regressions, alongside a 48% increase in user activation.",
       stats: [
         { value: "6 wks", label: "Concept to shipped feature" },
         { value: "48%", label: "Increase in user activation" },
       ],
+      image: {
+        artwork: ASSETS.workAiProduct,
+        backdrop: ASSETS.workAiProductBackdrop,
+        alt: "Shipped AI co-pilot interface",
+      },
     },
   },
   {
-    // Draft: no case-study page written yet. The fields below are the existing card copy.
-    draft: true,
     slug: "engineering-team-scale",
     title: "Scaling an Engineering Team from 4 to 30 Without Losing Velocity or Culture",
     year: "2026",
@@ -188,11 +210,37 @@ export const workProjects: readonly CaseStudy[] = [
     summary:
       "A post-Series B startup was growing fast but couldn’t hire quickly enough. We provided 26 pre-vetted senior engineers who embedded directly into their squads — same Slack, same standups, same sprint cadence. They shipped 3 major product lines that quarter.",
     cardImage: ASSETS.workStaffAugmentation,
+    industry: "Software & Technology",
+    client: { name: "Software & Technology", logo: "" },
+    services: ["Staff Augmentation", "Engineering Team Integration", "Product Delivery"],
+    hero: {
+      image: ASSETS.workStaffAugmentation,
+      backdrop: ASSETS.ctaBackdrop,
+      alt: "Mobile product interface supported by an embedded engineering team",
+    },
+    challenge: {
+      quote: "A post-Series B startup was growing fast but could not hire quickly enough to support its product delivery needs.",
+    },
+    approach: {
+      heading: "Embedding Engineers Into the Existing Team",
+      paragraphs: [
+        "We provided 26 pre-vetted senior engineers who embedded directly into the startup's squads.",
+        "The engineers joined the same Slack channels, standups, and sprint cadence as the internal team, supporting delivery within its existing ways of working.",
+      ],
+      image: { src: ASSETS.workStaffAugmentation, alt: "Product experience delivered by the expanded engineering team" },
+    },
     results: {
+      heading: "More Engineering Capacity, Faster Product Delivery",
+      text: "The team grew from four to 30 engineers and shipped three major product lines that quarter, with three times the feature output.",
       stats: [
         { value: "26", label: "Engineers embedded in 3 weeks" },
         { value: "3×", label: "Feature output that quarter" },
       ],
+      image: {
+        artwork: ASSETS.workStaffAugmentation,
+        backdrop: ASSETS.ctaBackdrop,
+        alt: "Mobile product delivered with embedded engineering support",
+      },
     },
   },
 ];
@@ -359,22 +407,40 @@ export const blogPosts: readonly BlogPost[] = [
     ],
   },
   {
-    // Draft: article not written yet. The fields below are the existing card copy.
-    draft: true,
     slug: "smarter-ai-workflows",
     title: "How to Get 10× Better Results From AI With 10× Smarter Workflows",
     category: "Tips",
     date: "2026-03-06",
     cardImage: ASSETS.blogGlasses,
+    excerpt: "A practical approach to improving AI results through clear inputs, focused tasks, human review, and repeatable workflows.",
+    hero: { src: ASSETS.blogGlasses, alt: "Smart glasses representing AI-assisted workflows" },
+    body: [
+      { type: "h2", text: "Start With the Workflow" },
+      { type: "p", text: "Better AI results start with a clear definition of the work. Identify the task, the information it needs, and the decision or output it should support before adding a model to the process. Treat the goal of a tenfold improvement as an ambition to measure, rather than a guaranteed result." },
+      { type: "h2", text: "Give Each Step a Clear Purpose" },
+      { type: "p", text: "Break a broad request into focused steps: collect the relevant information, produce an initial output, check it against your requirements, and send it to the right person for review. Clear boundaries make failures easier to find and fix." },
+      { type: "list", items: ["Define the expected output and acceptance criteria.", "Supply relevant context and examples.", "Keep human review at decisions that need judgment.", "Record errors and use them to improve the workflow."] },
+      { type: "h2", text: "Measure the Whole Process" },
+      { type: "p", text: "Compare the workflow with your existing process using completion time, correction effort, and output quality. A fast initial response is useful only when the final result saves work. Start with one repeatable task, review the results, and expand the process when it is dependable." },
+    ],
   },
   {
-    // Draft: article not written yet. The fields below are the existing card copy.
-    draft: true,
     slug: "smaller-engineering-team",
     title: "How to Get 10× Better Results From AI With a Smaller Engineering Team",
     category: "Tips",
     date: "2026-03-06",
     cardImage: ASSETS.blogLaptop,
+    excerpt: "How a focused engineering team can use AI to reduce repetitive work while keeping ownership, review, and product quality clear.",
+    hero: { src: ASSETS.blogLaptop, alt: "Laptop representing a focused engineering workflow" },
+    body: [
+      { type: "h2", text: "Focus the Team on the Work That Matters" },
+      { type: "p", text: "A smaller engineering team needs clear priorities and a manageable scope. AI can support that focus by helping with repetitive work, but architecture, product decisions, and accountability still need named owners. A tenfold improvement is a goal to test against your own baseline, rather than an automatic outcome." },
+      { type: "h2", text: "Use AI Within the Delivery Process" },
+      { type: "p", text: "Start with bounded tasks such as drafting documentation, explaining unfamiliar code, or proposing an implementation for a well-defined change. Give the tool the relevant context and review its output through the same process used for other contributions." },
+      { type: "list", items: ["Keep changes small enough to review carefully.", "Assign an engineer to own each change.", "Validate behavior with checks that match the risk.", "Document decisions so the whole team can maintain the result."] },
+      { type: "h2", text: "Improve Through Feedback" },
+      { type: "p", text: "Track delivery time, rework, and defects to understand whether AI assistance is helping. Keep the workflows that reduce effort without weakening quality, and revise those that create extra review work. The aim is a dependable delivery process that the team can sustain." },
+    ],
   },
 ];
 

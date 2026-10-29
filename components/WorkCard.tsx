@@ -5,7 +5,6 @@ import Link from "next/link";
 import { resolveCaseStudy, type CaseStudy } from "@/lib/content";
 
 import { ArrowIcon } from "./ArrowIcon";
-import { DraftBadge } from "./DraftBadge";
 
 export type WorkCardProps = {
   project: CaseStudy;
@@ -36,12 +35,11 @@ export function WorkCard({ project, index = 0 }: WorkCardProps) {
         <div className="work-card-meta">
           <span className="work-card-meta-item">{study.year}</span>
           <span className="work-card-meta-item">{study.category}</span>
-          {study.draft ? <DraftBadge /> : null}
         </div>
 
         <h3 className="work-card-title">{study.title}</h3>
 
-        {!study.draft ? <img className="work-card-logo" src={study.client.logo} alt="" aria-hidden="true" /> : null}
+        {study.client.logo ? <img className="work-card-logo" src={study.client.logo} alt="" aria-hidden="true" /> : null}
 
         <div className="work-card-copy">
           <p className="work-card-description">{study.summary}</p>

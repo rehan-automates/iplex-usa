@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ArrowIcon } from "@/components/ArrowIcon";
-import { DraftBadge } from "@/components/DraftBadge";
 import { PageShell } from "@/components/PageShell";
 import {
   ASSETS,
@@ -59,10 +58,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <div className={styles.heroHeading}>
-              <Image className={styles.clientLogo} src={study.client.logo} alt={study.client.name} width={124} height={32} unoptimized />
+              {study.client.logo ? <Image className={styles.clientLogo} src={study.client.logo} alt={study.client.name} width={124} height={32} unoptimized /> : null}
               <h1 id="case-study-title">
                 {study.title}
-                {study.draft ? <DraftBadge /> : null}
               </h1>
               <p>{study.summary}</p>
             </div>
@@ -141,7 +139,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                     <Image src={project.cardImage} alt="" fill sizes="(max-width: 768px) 100vw, 392px" unoptimized />
                   </div>
                   <div className={styles.relatedContent}>
-                    <Image src={project.client.logo} alt="" width={124} height={32} unoptimized />
+                    {project.client.logo ? <Image src={project.client.logo} alt="" width={124} height={32} unoptimized /> : null}
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                     <Link href={`/work/${project.slug}`} aria-label={`View case study: ${project.title}`}>
