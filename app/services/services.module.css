@@ -4,8 +4,8 @@
 }
 
 .intro {
-  width: 629px;
-  height: 222px;
+  width: min(629px, calc(100% - 2 * var(--gutter)));
+  min-height: 222px;
   margin: 124px auto 0;
   text-align: center;
 }
@@ -24,16 +24,17 @@
 }
 
 .intro h1 {
-  width: 480px;
+  max-width: 480px;
   margin: 8px auto 0;
-  font-size: 48px;
+  font-size: clamp(34px, 4vw, 48px);
   font-weight: 400;
   letter-spacing: -2.4px;
-  line-height: 48px;
+  line-height: 1;
+  text-wrap: balance;
 }
 
 .introDescription {
-  width: 602px;
+  max-width: 602px;
   margin: 24px auto 0;
   color: #a8a8a8;
   font-size: 16px;
@@ -44,35 +45,28 @@
 .servicesList {
   display: grid;
   gap: 24px;
-  width: 803px;
+  width: min(var(--content), calc(100% - 2 * var(--gutter)));
   margin: 50px auto 0;
 }
 
 .serviceCard {
   display: grid;
-  grid-template-columns: 427px 278px;
-  gap: 32px;
-  width: 803px;
-  height: 344px;
-  padding: 33px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 47.4%);
+  gap: 0;
+  width: 100%;
+  min-height: 720px;
+  padding: 0;
   border: 1px solid #24262b;
   border-radius: 16px;
   background: #131416;
 }
 
-.serviceCardTall {
-  grid-template-columns: 395px 310px;
-  height: 376px;
-}
-
 .serviceCopy {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  height: 278px;
-}
-
-.serviceCardTall .serviceCopy {
-  height: 310px;
+  min-height: 0;
+  padding: 32px;
 }
 
 .serviceNumber {
@@ -102,20 +96,16 @@
 }
 
 .deliverables {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 151px;
   margin: 0;
-  padding: 0;
+  margin-top: auto;
+  padding: 12px 0 0;
   list-style: none;
 }
 
 .deliverables li {
   display: flex;
   align-items: center;
-  height: 38px;
+  min-height: 38px;
   border-top: 1px solid #2b2d31;
   color: #d4d4d4;
   font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
@@ -126,21 +116,17 @@
 }
 
 .deliverables li:last-child {
-  height: 37px;
+  min-height: 37px;
 }
 
 .serviceImage {
   position: relative;
-  width: 278px;
-  height: 278px;
+  align-self: stretch;
+  width: 100%;
+  min-height: 0;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 0 15px 15px 0;
   background: #171717;
-}
-
-.serviceCardTall .serviceImage {
-  width: 310px;
-  height: 310px;
 }
 
 .serviceImage img {
@@ -151,50 +137,32 @@
   margin-top: 80px;
 }
 
-.page > :global(.site-footer) {
-  margin-top: 0;
-}
-
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .page {
     padding-bottom: 48px;
   }
 
   .intro {
-    width: calc(100% - 40px);
-    height: auto;
+    min-height: 0;
     margin-top: 112px;
   }
 
   .intro h1 {
-    width: min(480px, 100%);
     font-size: clamp(40px, 8vw, 48px);
-    line-height: 1;
-  }
-
-  .introDescription {
-    width: min(602px, 100%);
   }
 
   .servicesList {
     width: calc(100% - 40px);
-    max-width: 803px;
+    max-width: var(--content);
     margin-top: 56px;
   }
 
-  .serviceCard,
-  .serviceCardTall {
-    grid-template-columns: minmax(0, 1fr) minmax(230px, 310px);
-    width: 100%;
-  }
-
-  .serviceImage,
-  .serviceCardTall .serviceImage {
-    width: 100%;
+  .serviceCard {
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 42%);
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .intro {
     margin-top: 104px;
   }
@@ -218,42 +186,35 @@
     margin-top: 48px;
   }
 
-  .serviceCard,
-  .serviceCardTall {
+  .serviceCard {
     grid-template-columns: 1fr;
     gap: 28px;
-    height: auto;
+    min-height: 0;
     padding: 28px;
   }
 
-  .serviceCopy,
-  .serviceCardTall .serviceCopy {
-    height: 310px;
+  .serviceCopy {
+    min-height: 310px;
+    padding: 0;
   }
 
   .serviceCopy h2 {
     font-size: 27px;
   }
 
-  .serviceImage,
-  .serviceCardTall .serviceImage {
-    width: 100%;
-    height: auto;
+  .serviceImage {
     aspect-ratio: 1;
+    border-radius: 12px;
   }
 
   .cta {
     margin-top: 80px;
   }
 
-  .page > :global(.site-footer) {
-    margin-top: 70px;
-  }
 }
 
-@media (max-width: 420px) {
-  .serviceCard,
-  .serviceCardTall {
+@media (max-width: 480px) {
+  .serviceCard {
     padding: 22px;
   }
 
@@ -263,7 +224,7 @@
   }
 
   .deliverables li {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: .25px;
   }
 }

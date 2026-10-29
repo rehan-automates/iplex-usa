@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 import { BlogCard } from "@/components/BlogCard";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { blogPosts } from "@/lib/content";
+import { PageShell } from "@/components/PageShell";
+import { blogPosts, visible } from "@/lib/content";
 
 import styles from "./blog.module.css";
 
@@ -11,17 +10,12 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Expert perspectives on AI automation, workflow design, and the systems behind high-performing businesses.",
+  alternates: { canonical: "/blog" },
 };
 
-const articleHref = "/blog/building-smarter-ai-tools";
-
 export default function BlogPage() {
-  const posts = [...blogPosts, ...blogPosts];
-
   return (
-    <main className={`site-page ${styles.page}`}>
-      <Header />
-
+    <PageShell className={styles.page}>
       <section className={styles.heading} aria-labelledby="blog-title">
         <p className={styles.eyebrow}>BLOGS</p>
         <h1 id="blog-title">Insights on AI &amp; Automation</h1>
@@ -31,13 +25,12 @@ export default function BlogPage() {
         </p>
       </section>
 
-      <section className={styles.grid} aria-label="Latest insights">
-        {posts.map((post, index) => (
-          <BlogCard post={{ ...post, href: articleHref }} key={`${post.title}-${index}`} />
+      <section className={styles.grid} aria-labelledby="blog-list-title">
+        <h2 className="visually-hidden" id="blog-list-title">Latest articles</h2>
+        {visible(blogPosts).map((post) => (
+          <BlogCard post={post} key={post.slug} />
         ))}
       </section>
-
-      <Footer />
-    </main>
+    </PageShell>
   );
 }

@@ -1,18 +1,17 @@
+/* Fields flow top to bottom, so error messages and wrapped consent text have room to grow */
 .form {
-  position: relative;
-  width: 620px;
-  height: 718px;
+  display: grid;
+  gap: 32px;
+  width: 100%;
+  max-width: 620px;
+  padding: 23px;
   border: 1px solid #34343a;
   border-radius: 12px;
   background: #1a1a1d;
 }
 
 .field {
-  position: absolute;
-  left: 23px;
   display: block;
-  width: 572px;
-  height: 84px;
 }
 
 .field > span {
@@ -40,6 +39,7 @@
   font-size: 18px;
   font-weight: 400;
   letter-spacing: -.36px;
+  transition: border-color var(--motion-standard) var(--motion-ease), box-shadow var(--motion-standard) var(--motion-ease);
 }
 
 .field input,
@@ -57,9 +57,10 @@
 
 .field textarea {
   height: 100px;
+  min-height: 100px;
   padding: 14px 23px;
   line-height: 25.2px;
-  resize: none;
+  resize: vertical;
 }
 
 .field input::placeholder,
@@ -68,23 +69,42 @@
   opacity: 1;
 }
 
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-  border-color: #707078;
+/* Visible keyboard focus: a border change alone is too subtle, so add a ring */
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .22);
 }
 
-.name { top: 23px; }
-.email { top: 139px; }
-.company { top: 256px; }
-.budget { top: 372px; }
-.message { top: 489px; height: 124px; }
+.group[data-invalid="true"] .field input,
+.group[data-invalid="true"] .field textarea {
+  border-color: #ff7a70;
+}
+
+.error {
+  margin-top: 8px;
+  color: #ff9d95;
+  font-size: 14px;
+  letter-spacing: -.28px;
+  line-height: 20px;
+}
+
+.error:empty {
+  display: none;
+}
+
+.footerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 24px;
+}
 
 .consent {
-  position: absolute;
-  top: 644px;
-  left: 23px;
-  width: 331px;
+  flex: 1 1 240px;
+  max-width: 331px;
   color: #a8a8a8;
   font-size: 16px;
   letter-spacing: -.32px;
@@ -93,13 +113,13 @@
 
 .consent a {
   color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .submit {
-  position: absolute;
-  top: 645px;
-  right: 23px;
-  width: 229px;
+  flex: 0 1 229px;
+  min-width: 140px;
   height: 48px;
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 8px;
@@ -109,57 +129,29 @@
   font-weight: 500;
   letter-spacing: -.28px;
   line-height: 14px;
-  transition: background-color .2s ease;
+  transition: background-color var(--motion-standard) var(--motion-ease), transform var(--motion-micro) var(--motion-ease);
 }
 
-.submit:hover {
+.submit:hover:not(:disabled) {
   background: #e5e5e7;
 }
 
-@media (max-width: 1279px) {
-  .form {
-    width: 100%;
-  }
-
-  .field {
-    width: calc(100% - 46px);
-  }
-
-  .submit {
-    width: min(229px, calc(42% - 23px));
-  }
-
-  .consent {
-    width: min(331px, calc(58% - 30px));
-  }
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
-@media (max-width: 600px) {
+.submit:disabled {
+  cursor: default;
+  opacity: .7;
+}
+
+@media (max-width: 480px) {
   .form {
-    height: 790px;
-  }
-
-  .field {
-    left: 19px;
-    width: calc(100% - 38px);
-  }
-
-  .name { top: 23px; }
-  .email { top: 139px; }
-  .company { top: 255px; }
-  .budget { top: 371px; }
-  .message { top: 487px; }
-
-  .consent {
-    top: 640px;
-    left: 19px;
-    width: calc(100% - 38px);
+    gap: 28px;
+    padding: 19px;
   }
 
   .submit {
-    top: 715px;
-    right: 19px;
-    left: 19px;
-    width: calc(100% - 38px);
+    flex: 1 1 100%;
   }
 }

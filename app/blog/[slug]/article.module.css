@@ -1,0 +1,298 @@
+.page {
+  display: flow-root;
+  padding-bottom: 31px;
+}
+
+/* Article — header, hero image and body flow top to bottom; nothing is positioned by hand */
+.article {
+  width: min(1005px, calc(100% - 2 * var(--gutter)));
+  margin: 130px auto 0;
+}
+
+.articleHeader {
+  width: 100%;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), monospace;
+  font-size: 12px;
+  letter-spacing: .96px;
+  line-height: 14.4px;
+  text-transform: uppercase;
+}
+
+.articleHeader h1 {
+  max-width: 755px;
+  margin-top: 16px;
+  font-size: clamp(38px, 5vw, 56px);
+  font-weight: 400;
+  letter-spacing: -2.8px;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.hero {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  margin-top: 48px;
+  aspect-ratio: 1000 / 605;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.body {
+  width: 100%;
+  margin-top: 53px;
+}
+
+/* Vertical rhythm: 12px after a heading, 32px before a sub-heading, 16px between paragraphs */
+.body > * + * {
+  margin-top: 16px;
+}
+
+.body h2,
+.body h3,
+.body p,
+.body ul,
+.body figure,
+.body blockquote {
+  margin-bottom: 0;
+}
+
+.body h2 {
+  margin-top: 48px;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -1.4px;
+  line-height: 39.2px;
+}
+
+.body h3 {
+  margin-top: 32px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  line-height: 28px;
+}
+
+.body > :first-child {
+  margin-top: 0;
+}
+
+.body h2 + p,
+.body h3 + p,
+.body h2 + :global(.article-list),
+.body h3 + :global(.article-list) {
+  margin-top: 12px;
+}
+
+.body h2 + h3 {
+  margin-top: 32px;
+}
+
+.body :global(.article-list) + p {
+  margin-top: 12px;
+}
+
+.body p,
+.body ul {
+  width: 100%;
+  margin-top: 0;
+  color: #a8a8a8;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.body > p + p {
+  margin-top: 16px;
+}
+
+.body > p + h3 {
+  margin-top: 32px;
+}
+
+.body strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.body ul {
+  margin: 0;
+  padding-left: 21px;
+}
+
+.body :global(.article-list-lead) {
+  margin: 0;
+}
+
+.body :global(.article-list) > ul {
+  margin-top: 0;
+}
+
+.body figure {
+  margin: 32px 0 0;
+}
+
+.body figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.body figcaption {
+  margin-top: 10px;
+  color: #a8a8a8;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.body blockquote {
+  margin: 32px 0 0;
+  padding-left: 20px;
+  border-left: 2px solid #34343a;
+}
+
+.body blockquote p {
+  color: #fff;
+  font-size: 22px;
+  letter-spacing: -.8px;
+  line-height: 28px;
+}
+
+.body blockquote footer {
+  margin-top: 10px;
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), monospace;
+  font-size: 12px;
+  letter-spacing: .96px;
+  text-transform: uppercase;
+}
+
+/* Related posts */
+.related {
+  width: min(1240px, calc(100% - 2 * var(--gutter)));
+  margin: 108px auto 0;
+}
+
+.relatedHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 43px;
+}
+
+.relatedHeader h2 {
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 400;
+  letter-spacing: -2.4px;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.more {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  width: 120px;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid #34343a;
+  border-radius: 8px;
+  background: #1a1a1d;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color var(--motion-standard) var(--motion-ease), border-color var(--motion-standard) var(--motion-ease);
+}
+
+.more:hover {
+  border-color: #5b5b62;
+  background: #242428;
+}
+
+.more svg {
+  width: 18px;
+  height: 18px;
+  color: #a8a8a8;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 38px;
+  margin-top: 40px;
+}
+
+.relatedGrid :global(.blog-card-copy) {
+  margin-top: 24px;
+}
+
+.relatedGrid :global(.blog-card-title) {
+  margin-top: 14px;
+}
+
+@media (max-width: 1024px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 40px;
+  }
+
+  .article {
+    margin-top: 108px;
+  }
+
+  .articleHeader h1 {
+    font-size: clamp(40px, 11vw, 56px);
+    letter-spacing: -2.4px;
+  }
+
+  .hero {
+    margin-top: 50px;
+    aspect-ratio: auto;
+    height: min(75vw, 520px);
+  }
+
+  .body {
+    margin-top: 52px;
+  }
+
+  .body h2 {
+    margin-top: 54px;
+  }
+
+  .body h3 {
+    margin-top: 26px;
+  }
+
+  .related {
+    margin-top: 120px;
+  }
+
+  .relatedHeader {
+    align-items: center;
+    padding-top: 0;
+  }
+
+  .relatedGrid {
+    grid-template-columns: 1fr;
+    margin-top: 42px;
+  }
+
+}

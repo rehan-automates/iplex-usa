@@ -4,8 +4,8 @@
 }
 
 .intro {
-  width: 629px;
-  height: 222px;
+  width: min(629px, calc(100% - 2 * var(--gutter)));
+  min-height: 222px;
   margin: 115px auto 0;
   text-align: center;
 }
@@ -24,16 +24,17 @@
 }
 
 .intro h1 {
-  width: 480px;
+  max-width: 480px;
   margin: 8px auto 0;
-  font-size: 48px;
+  font-size: clamp(34px, 4vw, 48px);
+  text-wrap: balance;
   font-weight: 400;
   letter-spacing: -2.4px;
-  line-height: 48px;
+  line-height: 1;
 }
 
 .description {
-  width: 602px;
+  max-width: 602px;
   margin: 24px auto 0;
   color: #a8a8a8;
   font-size: 16px;
@@ -44,8 +45,7 @@
 .workList {
   display: grid;
   gap: 120px;
-  width: min(1240px, calc(100% - 40px));
-  height: 2400px;
+  width: min(1240px, calc(100% - 2 * var(--gutter)));
   margin: 0 auto;
 }
 
@@ -58,10 +58,6 @@
   margin-top: 105px;
 }
 
-.page > :global(.site-footer) {
-  margin-top: 0;
-}
-
 @media (max-width: 768px) {
   .page {
     padding-bottom: 48px;
@@ -69,7 +65,7 @@
 
   .intro {
     width: calc(100% - 32px);
-    height: auto;
+    min-height: 0;
     margin-top: 104px;
   }
 
@@ -91,7 +87,6 @@
   .workList {
     gap: 28px;
     width: calc(100% - 32px);
-    height: auto;
     margin-top: 56px;
   }
 
@@ -99,7 +94,4 @@
     margin-top: 80px;
   }
 
-  .page > :global(.site-footer) {
-    margin-top: 70px;
-  }
 }

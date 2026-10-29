@@ -2,48 +2,32 @@
 
 import Link from "next/link";
 
-export type BlogPost = {
-  title: string;
-  category?: string;
-  date?: string;
-  image?: string;
-  imageSrc?: string;
-  imageAlt?: string;
-  alt?: string;
-  href?: string;
-  link?: string;
-  slug?: string;
-};
+import { dateAttr, formatDate, resolveBlogPost, type BlogPost } from "@/lib/content";
+
+import { DraftBadge } from "./DraftBadge";
 
 export type BlogCardProps = {
   post: BlogPost;
 };
 
 export function BlogCard({ post }: BlogCardProps) {
-  const image = post.image ?? post.imageSrc;
-  const href = post.href ?? post.link ?? `/blog/${post.slug ?? "building-smarter-ai-tools"}`;
+  const entry = resolveBlogPost(post);
+  const href = `/blog/${entry.slug}`;
 
   return (
     <article className="blog-card">
-      <Link className="blog-card-media-link" href={href} aria-label={`Read ${post.title}`}>
-        {image ? (
-          <img
-            className="blog-card-image"
-            src={image}
-            alt={post.imageAlt ?? post.alt ?? ""}
-          />
-        ) : null}
+      <Link className="blog-card-media-link" href={href} aria-label={`Read ${entry.title}`}>
+        <img className="blog-card-image" src={entry.cardImage} alt="" loading="lazy" decoding="async" />
       </Link>
       <div className="blog-card-copy">
-        {post.category || post.date ? (
-          <p className="blog-card-meta">
-            {post.category ? <span>{post.category}</span> : null}
-            {post.category && post.date ? <span aria-hidden="true">•</span> : null}
-            {post.date ? <time>{post.date}</time> : null}
-          </p>
-        ) : null}
+        <p className="blog-card-meta">
+          <span>{entry.category}</span>
+          <span aria-hidden="true">•</span>
+          <time dateTime={dateAttr(entry.date)}>{formatDate(entry.date)}</time>
+          {entry.draft ? <DraftBadge /> : null}
+        </p>
         <h3 className="blog-card-title">
-          <Link href={href}>{post.title}</Link>
+          <Link href={href}>{entry.title}</Link>
         </h3>
       </div>
     </article>

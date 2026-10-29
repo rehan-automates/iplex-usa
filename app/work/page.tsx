@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
 import { CTASection } from "@/components/CTASection";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { PageShell } from "@/components/PageShell";
 import { WorkCard } from "@/components/WorkCard";
-import { workProjects } from "@/lib/content";
+import { visible, workProjects } from "@/lib/content";
 
 import styles from "./work.module.css";
 
@@ -12,13 +11,12 @@ export const metadata: Metadata = {
   title: "Work",
   description:
     "Explore selected iPlex software engineering, AI development, and product delivery case studies.",
+  alternates: { canonical: "/work" },
 };
 
 export default function WorkPage() {
   return (
-    <main className={`site-page ${styles.page}`}>
-      <Header />
-
+    <PageShell className={styles.page}>
       <section className={styles.intro} aria-labelledby="work-title">
         <p className={styles.eyebrow}>WORK</p>
         <h1 id="work-title">Engineered. Scaled. Delivered.</h1>
@@ -28,14 +26,14 @@ export default function WorkPage() {
         </p>
       </section>
 
-      <section className={styles.workList} aria-label="Selected work">
-        {workProjects.map((project, index) => (
-          <WorkCard project={project} index={index} key={project.title} />
+      <section className={styles.workList} aria-labelledby="work-list-title">
+        <h2 className="visually-hidden" id="work-list-title">Selected case studies</h2>
+        {visible(workProjects).map((project, index) => (
+          <WorkCard project={project} index={index} key={project.slug} />
         ))}
       </section>
 
       <CTASection className={styles.cta} />
-      <Footer />
-    </main>
+    </PageShell>
   );
 }

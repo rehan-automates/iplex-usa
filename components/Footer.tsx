@@ -1,21 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 
+import type { ReactNode } from "react";
 import Link from "next/link";
+
+import { siteInfo, visible, type SocialLink } from "@/lib/content";
 
 const footerLogo = "/assets/9ec80305a487911b3718899bd05a058d7273641b.png";
 const footerMotion = "/assets/347c615881b659a74d52e560d6c00089e2b701d4.gif";
 const footerStill = "/assets/6b5fb31731d5f3618f25467b52a4bbe7b3b4302b.png";
-
-const footerNavigation = [
-  { href: "/", label: "Company" },
-  { href: "/services", label: "Services" },
-  { href: "/services", label: "Industries" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms and Condition" },
-  { href: "/blog", label: "Resources" },
-] as const;
 
 function FacebookIcon() {
   return (
@@ -43,7 +35,25 @@ function InstagramIcon() {
   );
 }
 
+const socialIcons: Record<SocialLink["platform"], ReactNode> = {
+  facebook: <FacebookIcon />,
+  x: <XIcon />,
+  instagram: <InstagramIcon />,
+};
+
 export function Footer() {
+  const socials = visible(siteInfo.socials);
+  const legal = visible(siteInfo.legal);
+  const navigation = [
+    { href: "/", label: "Company" },
+    { href: "/services", label: "Services" },
+    { href: "/services", label: "Industries" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    ...legal.map(({ href, label }) => ({ href, label })),
+    { href: "/blog", label: "Resources" },
+  ];
+
   return (
     <footer className="site-footer">
       <div className="footer-inner">
@@ -56,15 +66,17 @@ export function Footer() {
           </p>
 
           <div className="footer-media" aria-hidden="true">
-            <img className="footer-media-motion" src={footerMotion} alt="" />
-            <img className="footer-media-still" src={footerStill} alt="" />
+            <picture>
+              <source media="(prefers-reduced-motion: reduce)" srcSet={footerStill} />
+              <img className="footer-media-motion" src={footerMotion} alt="" loading="lazy" decoding="async" />
+            </picture>
           </div>
         </div>
 
         <div className="footer-navigation-column">
           <p className="footer-label">Navigation</p>
           <nav className="footer-navigation" aria-label="Footer navigation">
-            {footerNavigation.map((item) => (
+            {navigation.map((item) => (
               <Link className="footer-navigation-link" href={item.href} key={item.label}>
                 {item.label}
               </Link>
@@ -73,34 +85,40 @@ export function Footer() {
         </div>
 
         <div className="footer-contact-column">
-          <div className="footer-social-block">
-            <p className="footer-label">Socials</p>
-            <div className="footer-socials">
-              <a className="footer-social-link" href="#" aria-label="iPlex on Facebook">
-                <FacebookIcon />
-              </a>
-              <a className="footer-social-link" href="#" aria-label="iPlex on X">
-                <XIcon />
-              </a>
-              <a className="footer-social-link" href="#" aria-label="iPlex on Instagram">
-                <InstagramIcon />
-              </a>
+          {socials.length ? (
+            <div className="footer-social-block">
+              <p className="footer-label">Socials</p>
+              <div className="footer-socials">
+                {socials.map((social) => (
+                  <a
+                    className="footer-social-link"
+                    href={social.href}
+                    key={social.platform}
+                    aria-label={social.label}
+                    {...(social.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {socialIcons[social.platform]}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
 
           <div className="footer-contact-block">
             <p className="footer-label">Email</p>
-            <a className="footer-email" href="mailto:info@iplex.ai">
-              info@iplex.ai
+            <a className="footer-email" href={`mailto:${siteInfo.email}`}>
+              {siteInfo.email}
             </a>
           </div>
 
-          <div className="footer-contact-block">
-            <p className="footer-label">Phone</p>
-            <a className="footer-phone" href="tel:+12345678">
-              +12 345 678
-            </a>
-          </div>
+          {siteInfo.phone ? (
+            <div className="footer-contact-block">
+              <p className="footer-label">Phone</p>
+              <a className="footer-phone" href={siteInfo.phone.href}>
+                {siteInfo.phone.display}
+              </a>
+            </div>
+          ) : null}
 
           <form className="footer-newsletter" action="/contact" method="get">
             <label className="footer-label" htmlFor="footer-email">
@@ -112,6 +130,7 @@ export function Footer() {
                 name="email"
                 placeholder="Email address"
                 type="email"
+                autoComplete="email"
                 required
               />
               <button type="submit">Submit</button>
@@ -121,7 +140,15 @@ export function Footer() {
       </div>
 
       <div className="footer-legal">
-        <p>© 2026 iPlex. All rights reserved. · Privacy Policy · Terms &amp; Conditions</p>
+        <p>
+          © 2026 iPlex. All rights reserved.
+          {legal.map((item) => (
+            <span key={item.href}>
+              {" · "}
+              <Link href={item.href}>{item.label}</Link>
+            </span>
+          ))}
+        </p>
       </div>
     </footer>
   );

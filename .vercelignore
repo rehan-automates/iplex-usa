@@ -1,0 +1,17 @@
+# Local browser and development state
+tmp/
+.vscode/
+
+# Design reference files are not required at runtime
+.figma-source/
+.figma-reference/
+
+# Local build and dependency output
+.next/
+node_modules/
+*.tsbuildinfo
+
+# Local secrets and logs
+.env*
+!.env.example
+*.log

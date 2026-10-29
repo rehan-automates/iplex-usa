@@ -5,15 +5,16 @@
 
 .contact {
   display: grid;
-  grid-template-columns: 500px 620px;
-  column-gap: 120px;
-  width: 1240px;
-  height: 718px;
+  grid-template-columns: minmax(0, 500px) minmax(0, 620px);
+  column-gap: clamp(32px, 4vw, 64px);
+  justify-content: start;
+  width: min(1240px, calc(100% - 2 * var(--gutter)));
+  min-height: 718px;
   margin: 120px auto 0;
 }
 
 .copy {
-  width: 500px;
+  width: 100%;
 }
 
 .eyebrow {
@@ -32,16 +33,17 @@
 }
 
 .copy h1 {
-  width: 500px;
+  width: 100%;
   margin-top: 20px;
-  font-size: 56px;
+  font-size: clamp(40px, 5vw, 56px);
   font-weight: 400;
   letter-spacing: -2.8px;
-  line-height: 56px;
+  line-height: 1;
+  text-wrap: balance;
 }
 
 .description {
-  width: 346px;
+  max-width: 346px;
   margin-top: 20px;
   color: #a8a8a8;
   font-size: 16px;
@@ -50,32 +52,27 @@
 }
 
 .cta {
-  margin-top: 20px;
+  margin-top: 96px;
 }
 
 @media (max-width: 1279px) {
   .contact {
-    grid-template-columns: minmax(0, 500px) minmax(0, 620px);
-    column-gap: clamp(40px, 7vw, 120px);
-    width: calc(100% - 40px);
-  }
-
-  .copy,
-  .copy h1 {
-    width: 100%;
+    grid-template-columns: minmax(0, .8fr) minmax(420px, 1.2fr);
+    column-gap: clamp(20px, 2.5vw, 32px);
+    width: calc(100% - 32px);
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .page {
     padding-bottom: 40px;
   }
 
   .contact {
     grid-template-columns: 1fr;
-    gap: 54px;
+    gap: 36px;
     width: calc(100% - 32px);
-    height: auto;
+    min-height: 0;
     margin-top: 112px;
   }
 
@@ -97,4 +94,41 @@
   .cta {
     margin-top: 110px;
   }
+}
+
+/* Careers — target of the header's /contact#careers link */
+.careers {
+  width: min(1240px, calc(100% - 2 * var(--gutter)));
+  margin: clamp(72px, 9vw, 120px) auto 0;
+  scroll-margin-top: var(--header-offset);
+}
+
+.careers h2 {
+  margin-top: 20px;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  letter-spacing: -2px;
+  line-height: 1.05;
+}
+
+.careersBody {
+  max-width: 520px;
+  margin-top: 16px;
+  color: #a8a8a8;
+  font-size: 16px;
+  letter-spacing: -.32px;
+  line-height: 22.4px;
+}
+
+.careersLink {
+  display: inline-block;
+  margin-top: 20px;
+  border-bottom: 1px solid #5b5b62;
+  font-size: 16px;
+  padding-bottom: 2px;
+  transition: border-color var(--motion-micro) var(--motion-ease);
+}
+
+.careersLink:hover {
+  border-color: #fff;
 }

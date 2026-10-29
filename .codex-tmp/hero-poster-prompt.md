@@ -1,0 +1,3 @@
+Generated with the built-in image generation tool using the video's opening frame as the edit target.
+
+Use case: lighting-weather. Asset type: website hero video fallback poster, 16:9 landscape. Edit target: supplied first frame of the website's existing animation. Create a clean high quality still poster that closely preserves this exact framing, camera, rocky landscape silhouette, floating two-part metallic rectangular sculpture, positions and scale, hazy warm gray sky and muted golden light. Only gently refine compression/noise in the sky; maintain the same colors and exposure so a crossfade into the video has no conspicuous jump. Keep all original objects and layout. No new objects, no text, no logo, no border. Wide full bleed 16:9.

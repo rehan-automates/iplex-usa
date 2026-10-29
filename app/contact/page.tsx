@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/ContactForm";
 import { CTASection } from "@/components/CTASection";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { PageShell } from "@/components/PageShell";
+import { siteInfo, visible } from "@/lib/content";
 
 import styles from "./contact.module.css";
 
@@ -11,13 +11,16 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Tell iPlex what you are building and where software engineering or AI automation can help.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
-  return (
-    <main className={`site-page ${styles.page}`}>
-      <Header />
+  const { careers } = siteInfo;
+  // Link the consent text to Terms only once that page is published.
+  const terms = visible(siteInfo.legal).find((page) => page.href === "/terms");
 
+  return (
+    <PageShell className={styles.page}>
       <section className={styles.contact} aria-labelledby="contact-title">
         <div className={styles.copy}>
           <p className={styles.eyebrow}>CONTACT US</p>
@@ -28,11 +31,19 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <ContactForm />
+        <ContactForm termsHref={terms?.href} recipient={siteInfo.email} />
+      </section>
+
+      <section className={styles.careers} id="careers" aria-labelledby="careers-title">
+        <p className={styles.eyebrow}>CAREERS</p>
+        <h2 id="careers-title">{careers.heading}</h2>
+        <p className={styles.careersBody}>{careers.body}</p>
+        <a className={styles.careersLink} href={`mailto:${careers.email}`}>
+          {careers.email}
+        </a>
       </section>
 
       <CTASection className={styles.cta} />
-      <Footer />
-    </main>
+    </PageShell>
   );
 }

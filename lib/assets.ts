@@ -6,12 +6,14 @@ const asset = (fileName: string) => `/assets/${fileName}`;
  */
 export const ASSETS = {
   logo: asset("9ec80305a487911b3718899bd05a058d7273641b.png"),
+  /** Stand-in for any image slot of a draft entry that has not been supplied yet (dev only). */
+  placeholder: asset("placeholder.svg"),
 
   homeHeroAnimation: asset("632f5756c2d6fb41564d93cb5a398dc4290e9f51.gif"),
   homeHeroAnimated: asset("632f5756c2d6fb41564d93cb5a398dc4290e9f51.gif"),
   homeHeroStill: asset("c51e6941e7c11e7aa8f26c5af37c910e89289350.png"),
-  homeHeroLandscape: asset("home-hero-landscape-clean.png"),
   homeHeroLoop: asset("home-hero-loop.mp4"),
+  homeHeroPoster: asset("home-hero-poster.jpg"),
   mountainBackdrop: asset("79ccd6a9922709ac5bb6df4c9e199004cf7f8631.jpg"),
   whyUsBackground: asset("79ccd6a9922709ac5bb6df4c9e199004cf7f8631.jpg"),
 
@@ -21,7 +23,7 @@ export const ASSETS = {
 
   workSaas: asset("274b8a74bd7eebb23398c9719b7084007b6c63a3.png"),
   workSaasDetail: asset("514bd391c78774431623894e0dbb489a4561cb41.png"),
-  workAiProduct: asset("22c9bb80316b88c87233589545e82a1a6c8fed2f.png"),
+  workAiProduct: asset("work-ai-product-desktop.png"),
   workAiProductBackdrop: asset("035a93c42ff7801e5883795cf57c30cbc503dfae.jpg"),
   workStaffAugmentation: asset("05f9c70846494e19c5524a8248247a0f69a13ee3.png"),
   clinuvelWordmark: asset("f527bdad68666e3070d51d20b9220c63ce6b2e5f.png"),
@@ -36,6 +38,8 @@ export const ASSETS = {
   testimonialWoman: asset("292d49194ea7e439e26840787f1af9ad30e49c38.png"),
   testimonialMan: asset("0b4eac023300852ec056cb78b4832a23d3a3b28e.png"),
   testimonialPortrait: asset("27d5d4965dfa0b5b8fdd9d7a494f19d2439c73cc.png"),
+  testimonialVelaGrid: asset("testimonial-velagrid.png"),
+  testimonialNovaline: asset("testimonial-novaline.png"),
 
   aboutHero: asset("64b4ec77d2a64f24801b170edd3a4e55f58c4b00.jpg"),
   aboutApproach: asset("9b358afee638bd9f99888643310a6e7c6dec1552.jpg"),
@@ -43,6 +47,9 @@ export const ASSETS = {
   aboutAchievements: asset("e920f9e683fedfe8abcce6238e933570e9b41521.jpg"),
   aboutTestimonial: asset("fda8e4c4e1e5d2e2962f1ab6fc3d934dd3464c3e.png"),
   aboutPortrait: asset("fda8e4c4e1e5d2e2962f1ab6fc3d934dd3464c3e.png"),
+  teamMaya: asset("team-maya-chen.png"),
+  teamOmar: asset("team-omar-haddad.png"),
+  teamAmara: asset("team-amara-okafor.png"),
 
   serviceWorkflow: asset("9c51724a96b63b941697308378ddf2d9d8631050.jpg"),
   serviceAi: asset("9502786cb03a23835111f2c8207a35fb5230a2a5.jpg"),

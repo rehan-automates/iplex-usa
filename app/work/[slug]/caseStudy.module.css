@@ -1,0 +1,103 @@
+.page { display: flow-root; padding-bottom: 40px; }
+
+/* Hero — copy on the left, artwork on the right; heights follow the content */
+.hero { margin-top: 144px; padding-bottom: clamp(80px, 14vw, 200px); }
+.heroInner, .splitInner { display: grid; grid-template-columns: minmax(0, 556px) minmax(0, 620px); gap: 64px; width: min(1240px, calc(100% - 2 * var(--gutter))); min-height: 600px; margin: 0 auto; }
+.heroCopy { display: flex; flex-direction: column; justify-content: space-between; gap: 40px; }
+.clientLogo { width: 124px; height: 32px; margin-top: 9px; object-fit: contain; object-position: left center; filter: grayscale(1) brightness(6); }
+.hero h1 { margin-top: 19px; font-size: clamp(38px, 4.4vw, 56px); font-weight: 400; letter-spacing: -2.8px; line-height: 1; text-wrap: balance; }
+.heroHeading > p { margin-top: 16px; color: #a8a8a8; font-size: 16px; letter-spacing: -.32px; line-height: 22.4px; }
+
+.projectInfo { margin: 0; }
+.projectInfo > div { display: grid; grid-template-columns: 86px 1fr; min-height: 34px; padding-top: 1px; border-bottom: 1px solid rgba(255,255,255,.18); }
+.projectInfo dt { color: #a8a8a8; font-family: var(--font-geist-mono, Consolas), Consolas, monospace; font-size: 12px; letter-spacing: .96px; line-height: 16px; text-transform: uppercase; }
+.projectInfo dd { margin: 0; font-size: 14px; line-height: 17px; }
+.projectInfo .serviceInfo { grid-template-columns: 86px 1fr; min-height: 66px; padding-top: 0; border-bottom: 0; }
+.serviceInfo dd { display: grid; gap: 8px; }
+.serviceInfo span { position: relative; padding-left: 18px; }
+.serviceInfo span::before { position: absolute; top: 4px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: #323135; content: ""; }
+
+.heroImage, .splitImage { position: relative; width: 100%; aspect-ratio: 620 / 600; overflow: hidden; border-radius: 8px; }
+.heroImage > img:first-child, .heroArtwork { object-fit: cover; }
+.heroArtwork { z-index: 1; }
+
+/* Challenge */
+.challenge { position: relative; width: min(1200px, calc(100% - 2 * var(--gutter))); min-height: 464px; margin: 0 auto; overflow: hidden; }
+.challengeBackground { object-fit: cover; }
+.challengeShade { position: absolute; inset: 0; background: linear-gradient(90deg,#010004 0%,rgba(1,0,4,.3) 18%,rgba(1,0,4,.3) 82%,#010004 100%),linear-gradient(180deg,#010004 0%,rgba(1,0,4,.32) 30%,rgba(1,0,4,.38) 70%,#010004 100%); }
+.challengeContent { position: relative; z-index: 1; width: min(800px, calc(100% - 2 * var(--gutter))); margin: 0 auto; padding: 120px 0 80px; text-align: center; }
+.sectionLabel { display: flex; align-items: center; height: 24px; color: #d4d4d8; font-family: var(--font-geist-mono, Consolas), Consolas, monospace; font-size: 12px; font-weight: 500; letter-spacing: .96px; line-height: 12px; }
+.challenge .sectionLabel { justify-content: center; }
+.challenge blockquote { margin: 8px 0 0; font-size: clamp(24px, 2.6vw, 32px); font-weight: 400; letter-spacing: -1.28px; line-height: 1.2; text-wrap: balance; }
+.attribution { margin-top: 20px; color: #a8a8a8; font-family: var(--font-geist-mono, Consolas), Consolas, monospace; font-size: 12px; letter-spacing: .96px; line-height: 16px; text-transform: uppercase; }
+
+/* Approach and results — alternating copy / image rows */
+.approach { padding: clamp(80px, 14vw, 200px) 0 100px; }
+.approach .splitInner, .results .splitInner { grid-template-columns: minmax(0, 500px) minmax(0, 620px); justify-content: space-between; gap: 40px; min-height: 620px; }
+.approachCopy, .resultsCopy { align-self: center; }
+.approachCopy h2, .resultsCopy h2 { margin-top: 8px; font-size: clamp(34px, 4vw, 48px); font-weight: 400; letter-spacing: -2.4px; line-height: 1; text-wrap: balance; }
+.approachCopy > p, .resultsCopy > p { max-width: 500px; margin-top: 12px; color: #a8a8a8; font-size: 16px; letter-spacing: -.32px; line-height: 22.4px; }
+.approach .splitImage, .results .splitImage { aspect-ratio: 1; border-radius: 12px; }
+.approach .splitImage img { object-fit: cover; }
+
+.results { padding: 100px 0; }
+.results .splitInner { grid-template-columns: minmax(0, 620px) minmax(0, 500px); }
+.results .splitImage > img:first-child, .resultsArtwork { object-fit: cover; }
+.resultsArtwork { z-index: 1; }
+.resultsStats { display: grid; grid-template-columns: repeat(2, minmax(0, 234px)); gap: 32px; margin-top: 38px; }
+.resultsStats div { display: flex; flex-direction: column; }
+.resultsStats strong { font-size: clamp(36px, 3.4vw, 48px); font-weight: 400; letter-spacing: -2.4px; line-height: 1; }
+.resultsStats span { margin-top: 11px; color: #a8a8a8; font-family: var(--font-geist-mono, Consolas), Consolas, monospace; font-size: 12px; letter-spacing: .96px; line-height: 15px; text-transform: uppercase; }
+
+/* More projects — built from the other published case studies */
+.moreProjects { padding: 100px 0; }
+.moreProjectsInner { width: min(1240px, calc(100% - 2 * var(--gutter))); margin: 0 auto; }
+.moreProjectsHeading { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 48px; }
+.moreProjectsHeading h2 { font-size: clamp(34px, 4vw, 48px); font-weight: 400; letter-spacing: -2.4px; line-height: 1; }
+.moreLink, .relatedContent > a { display: flex; align-items: center; justify-content: space-between; height: 46px; padding: 0 16px; border: 1px solid #414147; border-radius: 8px; background: #242428; font-size: 14px; transition: background-color var(--motion-standard) var(--motion-ease), border-color var(--motion-standard) var(--motion-ease); }
+.moreLink:hover, .relatedContent > a:hover { border-color: #5b5b62; background: #2e2e33; }
+.moreLink { width: 120px; flex: 0 0 auto; }
+.moreLink svg, .relatedContent > a svg { width: 18px; height: 18px; color: #a8a8a8; }
+.relatedGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 48px; }
+.relatedImage { position: relative; width: 100%; aspect-ratio: 392 / 307; overflow: hidden; border-radius: 8px; }
+.relatedImage img { object-fit: cover; }
+.relatedContent { margin-top: 24px; }
+.relatedContent > img { width: 124px; height: 32px; object-fit: contain; object-position: left center; filter: grayscale(1) brightness(6); }
+.relatedContent h3 { margin-top: 22px; font-size: 24px; font-weight: 400; letter-spacing: -1.2px; line-height: 28.8px; }
+.relatedContent p { margin-top: 6px; color: #a8a8a8; font-size: 16px; letter-spacing: -.32px; line-height: 22.4px; }
+.relatedContent > a { width: 100%; margin-top: 16px; justify-content: center; gap: 12px; }
+@media (max-width: 1024px) {
+  .heroInner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .approach .splitInner, .results .splitInner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .page { padding-bottom: 48px; }
+  .hero { margin-top: 104px; padding-bottom: 0; }
+  .heroInner, .approach .splitInner, .results .splitInner { display: grid; grid-template-columns: 1fr; gap: 48px; min-height: 0; }
+  .heroCopy { gap: 0; }
+  .hero h1 { font-size: 42px; letter-spacing: -2px; line-height: 44px; }
+  .projectInfo { margin-top: 48px; }
+  .projectInfo .serviceInfo { min-height: 76px; padding-top: 5px; }
+  .heroImage, .splitImage, .approach .splitImage, .results .splitImage { width: 100%; aspect-ratio: 1; }
+  .challenge { width: 100%; min-height: 520px; margin-top: 80px; }
+  .challengeContent { width: calc(100% - 40px); padding: 100px 0; }
+  .challenge blockquote { font-size: 26px; line-height: 32px; }
+  .approach, .results { padding: 110px 0; }
+  .approachCopy h2, .resultsCopy h2 { font-size: 39px; line-height: 42px; }
+  .results .splitImage { order: 2; }
+  .resultsCopy { order: 1; }
+  .resultsStats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .moreProjects { padding: 80px 0; }
+  .moreProjectsInner { width: calc(100% - 32px); }
+  .moreProjectsHeading h2 { font-size: 39px; }
+  .relatedGrid { grid-template-columns: 1fr; gap: 70px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 37px; line-height: 39px; }
+  .projectInfo > div { grid-template-columns: 78px 1fr; }
+  .resultsStats strong { font-size: 42px; }
+  .moreLink { width: 105px; }
+}
