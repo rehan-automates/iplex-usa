@@ -1,0 +1,37 @@
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+# Server runtime dirs (/* so .gitkeep can be re-included)
+server/uploads/*
+!server/uploads/.gitkeep
+!server/uploads/chunks/
+server/uploads/chunks/*
+!server/uploads/chunks/.gitkeep
+server/audio/*
+!server/audio/.gitkeep
+server/chunks/*
+!server/chunks/.gitkeep
+server/exports/*
+!server/exports/.gitkeep
+server/fonts/*
+!server/fonts/.gitkeep
+client/dist/
+coverage/
+.vite/
+*.mp4
+*.mp3
+*.webm
+*.mov
+*.MOV
+.turbo/
+
+# Env files (keep .env.example commitable)
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Personal local Claude Code overrides (shared settings.json stays tracked)
+.claude/settings.local.json

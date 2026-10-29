@@ -1,0 +1,12 @@
+# Core service.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+numpy>=1.24
+pydantic>=2
+
+# ── Matte engine: install ONE of the two (see the module docstring) ──────────
+# Fast on CPU, softer edges — the default for machines without a CUDA GPU:
+mediapipe>=0.10
+# Best quality, wants a GPU (on CPU it is ~1-2 fps). Uncomment to use it:
+# torch>=2.1
+# torchvision>=0.16
