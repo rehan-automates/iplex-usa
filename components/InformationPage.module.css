@@ -1,0 +1,26 @@
+.content {
+  max-width: 900px;
+  min-height: 60svh;
+  padding-block: 160px 100px;
+}
+
+.content h1 {
+  margin-block: 24px 40px;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+
+.content p:not(:first-child) {
+  margin-top: 24px;
+  color: #a8a8a8;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.content a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

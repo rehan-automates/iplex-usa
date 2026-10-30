@@ -44,8 +44,8 @@
 
 .workList {
   display: grid;
-  gap: 120px;
-  width: min(1240px, calc(100% - 2 * var(--gutter)));
+  gap: clamp(40px, 8vw, 100px);
+  width: min(var(--content), calc(100% - 2 * var(--gutter)));
   margin: 0 auto;
 }
 
@@ -58,13 +58,12 @@
   margin-top: 105px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .page {
     padding-bottom: 48px;
   }
 
   .intro {
-    width: calc(100% - 32px);
     min-height: 0;
     margin-top: 104px;
   }
@@ -86,7 +85,6 @@
 
   .workList {
     gap: 28px;
-    width: calc(100% - 32px);
     margin-top: 56px;
   }
 

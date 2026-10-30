@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import type { CSSProperties } from "react";
 
 import { BlogCard } from "@/components/BlogCard";
 import { CTASection } from "@/components/CTASection";
 import { DynamicHomeHeroVideo } from "@/components/DynamicHomeHeroVideo";
 import { FAQ } from "@/components/FAQ";
 import { PageShell } from "@/components/PageShell";
+import { PainOrbit } from "@/components/PainOrbit";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
@@ -24,14 +24,6 @@ import {
   visibleFaq,
   workProjects,
 } from "@/lib/content";
-
-const painPoints = [
-  "Lack of Visibility",
-  "Legacy Modernization Lag",
-  "High Cloud OpEx",
-  "Fragmented Data Silos",
-  "Integration & Technical Debt",
-];
 
 const comparison = [
   { label: "Time to first commit", iplex: "Days", inhouse: "Weeks to months", inhouseState: "warning", agency: "Weeks", agencyState: "warning" },
@@ -57,7 +49,7 @@ export default function HomePage() {
             unoptimized
             sizes="100vw"
           />
-          <DynamicHomeHeroVideo src={ASSETS.homeHeroLoop} poster={ASSETS.homeHeroPoster} />
+          <DynamicHomeHeroVideo src={ASSETS.homeHeroLoop} webmSrc={ASSETS.homeHeroLoopWebm} />
         </div>
         <div className="home-hero__shade" />
         <div className="home-hero__copy site-container">
@@ -85,19 +77,7 @@ export default function HomePage() {
         </div>
       </Reveal>
 
-      <section className="pain-section">
-        <Reveal as="div" className="pain-orbit" aria-label="Enterprise pain points">
-          <div className="pain-orbit__rings" />
-          {painPoints.map((point, index) => (
-            <span className={`pain-pill-orbit pain-pill-orbit--${index + 1}`} key={point}>
-              <span className={`pain-pill pain-pill--${index + 1}`} style={{ "--pill-index": index } as CSSProperties}>
-                {point}
-              </span>
-            </span>
-          ))}
-          <h2>The Hidden Cost<br />of Fragmented<br />Enterprise Systems</h2>
-        </Reveal>
-      </section>
+      <PainOrbit />
 
       <section className="home-work site-container">
         <SectionHeading
@@ -121,7 +101,7 @@ export default function HomePage() {
           <div className="process-grid">
             {processSteps.map((step, index) => (
               <Reveal as="article" className="process-card" index={index} key={step.title}>
-                <img src={step.image} alt="" />
+                <img src={step.image} alt="" loading="lazy" decoding="async" />
                 <h3>{index + 1}. {step.title}</h3>
                 <p>{step.description}</p>
               </Reveal>
@@ -131,7 +111,7 @@ export default function HomePage() {
       </section>
 
       <section className="comparison-section">
-        <img className="comparison-section__bg" src={ASSETS.whyUsBackground} alt="" />
+        <img className="comparison-section__bg" src={ASSETS.whyUsBackground} alt="" loading="lazy" decoding="async" />
         <div className="site-container comparison-section__content">
           <SectionHeading
             eyebrow="WHY US"
@@ -162,12 +142,13 @@ export default function HomePage() {
             <article className="testimonial-card" key={item.company.name}>
               <div className="testimonial-card__copy">
                 {item.company.logo ? (
-                  <img className="testimonial-card__logo" src={item.company.logo} alt={item.company.name} />
+                  <img className="testimonial-card__logo" src={item.company.logo} alt={item.company.name} loading="lazy" decoding="async" />
                 ) : (
                   <div className="testimonial-card__wordmark">{item.company.name}</div>
                 )}
                 <blockquote>“{item.quote}”</blockquote>
                 <p>{item.attribution}</p><span>{item.role}</span>
+                {item.example ? <small className="testimonial-card__example">Illustrative testimonial · Fictional profile &amp; AI-generated portrait</small> : null}
               </div>
               <div className="testimonial-card__media">
                 <img src={item.portrait.src} alt={item.portrait.alt} loading="lazy" decoding="async" />
@@ -184,11 +165,11 @@ export default function HomePage() {
 
       <section className="insights-section site-container">
         <div className="section-line-heading"><h2>Insights on AI &amp; Automation</h2><Link className="button button--dark" href="/blog">See More <span>↗</span></Link></div>
-        <div className="blog-grid">{visible(blogPosts).map((post, index) => <Reveal index={index} key={post.slug}><BlogCard post={post} /></Reveal>)}</div>
+        <div className="blog-grid article-card-grid">{visible(blogPosts).map((post, index) => <Reveal index={index} key={post.slug}><BlogCard post={post} /></Reveal>)}</div>
       </section>
 
       <section className="faq-section site-container">
-        <div className="faq-section__title"><h2>Have questions?<br />Check out the<br />FAQs</h2></div>
+        <div className="faq-section__title"><h2>Have questions?<br /> Check out the<br /> FAQs</h2></div>
         <FAQ items={visibleFaq()} />
       </section>
 

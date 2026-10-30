@@ -35,6 +35,10 @@ export default function ServicesPage() {
                 <h2>{service.title}</h2>
                 <p className={styles.serviceDescription}>{service.description}</p>
 
+                <div className={styles.serviceDetails}>
+                  {service.details.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                </div>
+
                 <ul className={styles.deliverables}>
                   {service.features.map((feature) => (
                     <li key={feature}>{feature}</li>

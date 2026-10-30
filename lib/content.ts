@@ -7,17 +7,17 @@
  *
  *  - New case study  → add one object to `workProjects`  (renders /work/<slug>)
  *  - New blog post   → add one object to `blogPosts`     (renders /blog/<slug>)
- *  - Not finished?   → set `draft: true`; it stays hidden in production and shows
- *                      with [placeholders] in `npm run dev` (see lib/draft.ts).
+ *  - Not finished?   → set `draft: true`; missing fields use [placeholders].
+ *                      Entries remain visible in development and deployment.
  *  - Finished        → remove `draft`; TypeScript then lists any missing field.
  *
  * Image paths come from `ASSETS` (lib/assets.ts). Put new files in public/assets/.
  */
 import { ASSETS } from "./assets";
-import { fill, ph, SHOW_DRAFTS, visible, type Draftable } from "./draft";
+import { fill, ph, visible, type Draftable } from "./draft";
 
 export { ASSETS };
-export { SHOW_DRAFTS, visible };
+export { visible };
 
 /* ------------------------------------------------------------------ shared */
 
@@ -245,7 +245,7 @@ export const workProjects: readonly CaseStudy[] = [
   },
 ];
 
-/** Published case study for a URL slug (drafts are visible in dev only). */
+/** Case study for a URL slug, consistently available in every environment. */
 export function getCaseStudy(slug: string): CaseStudy | undefined {
   return visible(workProjects).find((project) => project.slug === slug);
 }
@@ -444,7 +444,7 @@ export const blogPosts: readonly BlogPost[] = [
   },
 ];
 
-/** Published post for a URL slug (drafts are visible in dev only). */
+/** Blog post for a URL slug, consistently available in every environment. */
 export function getBlogPost(slug: string): BlogPost | undefined {
   return visible(blogPosts).find((post) => post.slug === slug);
 }
@@ -460,6 +460,7 @@ export type Service = {
   number: string;
   title: string;
   description: string;
+  details: readonly string[];
   features: readonly string[];
   image: string;
 };
@@ -476,6 +477,10 @@ export const services: readonly Service[] = [
     number: "01",
     title: "Workflow Automation",
     description: "Structured systems that eliminate repetitive work.",
+    details: [
+      "We map how work moves through your business, identify the manual steps that slow your team down, and connect the tools you already use. Approvals, data entry, reporting, and handoffs become part of a clear, repeatable workflow.",
+      "Your team gets a system it can follow and maintain, with clear ownership and visibility into what happens next. As your processes evolve, the automation can grow with them instead of adding another disconnected tool to manage.",
+    ],
     features: [
       "WORKFLOW AUDITS",
       "CROSS-PLATFORM TOOL INTEGRATION",
@@ -488,6 +493,10 @@ export const services: readonly Service[] = [
     number: "02",
     title: "AI-Powered Systems",
     description: "Intelligence embedded into your operations.",
+    details: [
+      "We build AI capabilities around the tasks your team handles every day, from qualifying incoming leads to organizing information and answering internal questions. Each system connects to the relevant business context so it can support a specific, useful workflow.",
+      "We define how information enters the system, where human review is needed, and how results reach the right people. The focus is a practical tool your team can use, with clear boundaries and a process for reviewing its output.",
+    ],
     features: [
       "AI LEAD QUALIFICATION SYSTEMS",
       "AI DATA PROCESSING & ENRICHMENT",
@@ -500,6 +509,10 @@ export const services: readonly Service[] = [
     number: "03",
     title: "Sales & Revenue Automation",
     description: "Predictable, scalable revenue infrastructure.",
+    details: [
+      "We connect lead capture, your CRM, and follow-up activity into one coordinated process. New enquiries can reach the right owner, trigger the next action, and move through a pipeline that reflects how your team actually sells.",
+      "From nurture sequences to revenue dashboards, we help make the next step visible and reduce manual updates between tools. Your team can see where opportunities stand, which conversations need attention, and where a handoff is holding up progress.",
+    ],
     features: [
       "AUTOMATED LEAD CAPTURE & DISTRIBUTION",
       "CRM PIPELINE AUTOMATION",
@@ -583,7 +596,7 @@ export type AboutContent = {
   /** Company-wide numbers (four fit the layout). `image` is displayed about 831×820 px — supply 1662×1640. */
   metrics: readonly Metric[];
   metricsImage: Img;
-  /** Leave empty until you have people to list: the section stays hidden in production. */
+  /** Supplied team profiles; the existing preview profiles render while this is empty. */
   team: readonly TeamMember[];
   /** Heading above the team grid. */
   teamHeading: { eyebrow: string; title: string };
@@ -683,11 +696,10 @@ const TEAM_MOCK_MEMBERS: readonly TeamMember[] = [
   },
 ];
 
-/** Team members to show: the real list, or three [placeholders] in dev while it is empty. */
+/** Use the supplied profiles, or the existing preview profiles, in every environment. */
 export function teamForDisplay(): { members: readonly TeamMember[]; isPlaceholder: boolean } {
   if (about.team.length) return { members: about.team, isPlaceholder: false };
-  if (SHOW_DRAFTS) return { members: TEAM_MOCK_MEMBERS, isPlaceholder: true };
-  return { members: [], isPlaceholder: false };
+  return { members: TEAM_MOCK_MEMBERS, isPlaceholder: true };
 }
 
 /* ------------------------------------------- Home: stats, testimonials, logos */
@@ -702,6 +714,8 @@ export const homeStats: readonly Metric[] = [
 
 export type Testimonial = {
   draft?: boolean;
+  /** Generated demonstration content, not a verified client endorsement. */
+  example?: boolean;
   /** `logo` is a wordmark on a transparent background, displayed about 124×32 px. */
   company: { name: string; logo?: string };
   /** The quote itself, 100–220 characters, without quotation marks (they are added for you). */
@@ -713,6 +727,33 @@ export type Testimonial = {
   /** Portrait, displayed 318×400 px — supply 636×800. */
   portrait: Img;
 };
+
+export const exampleTestimonials: readonly Testimonial[] = [
+  {
+    example: true,
+    company: { name: "Forma Studio" },
+    quote: "From the first workshop to launch, we had a clear plan and a team that cared as much about the product as we did.",
+    attribution: "Elena Rivera",
+    role: "Founder & CEO",
+    portrait: { src: "/assets/testimonial-elena.webp", alt: "AI-generated portrait of fictional founder Elena Rivera" },
+  },
+  {
+    example: true,
+    company: { name: "Northstar Cloud" },
+    quote: "They brought clarity to a complex platform. Our engineers could focus on building, with a partner we could count on.",
+    attribution: "Marcus Bennett",
+    role: "VP of Engineering",
+    portrait: { src: "/assets/testimonial-marcus.webp", alt: "AI-generated portrait of fictional engineering leader Marcus Bennett" },
+  },
+  {
+    example: true,
+    company: { name: "Tandem Operations" },
+    quote: "The best part was how closely they listened. The automation fit the way our team worked and made everyday tasks simpler.",
+    attribution: "Arjun Mehta",
+    role: "Co-Founder & COO",
+    portrait: { src: "/assets/testimonial-arjun.webp", alt: "AI-generated portrait of fictional operations leader Arjun Mehta" },
+  },
+];
 
 export const testimonials: readonly Testimonial[] = [
   {
@@ -747,6 +788,7 @@ export const testimonials: readonly Testimonial[] = [
     role: "Chief Product Officer",
     portrait: { src: ASSETS.testimonialNovaline, alt: "Novaline Systems product leader" },
   },
+  ...exampleTestimonials,
 ];
 
 /* ------------------------------------------------- Site info (footer, contact) */
@@ -755,14 +797,14 @@ export type SocialLink = {
   platform: "facebook" | "x" | "instagram";
   /** Accessible name, e.g. "iPlex on Facebook". */
   label: string;
-  /** Full profile URL. Entries marked `draft` are hidden in production. */
+  /** Full profile URL, or # for a preview link awaiting its destination. */
   href: string;
   draft?: boolean;
 };
 
 export type LegalLink = {
   label: string;
-  /** Page path, e.g. "/privacy". Hidden in production while `draft` (no page exists yet). */
+  /** Page path, e.g. "/privacy". */
   href: string;
   draft?: boolean;
 };
@@ -783,13 +825,13 @@ export const siteInfo: SiteInfo = {
   email: "info@iplex.ai",
   phone: { display: "+12 345 678", href: "tel:+12345678" },
   socials: [
-    { platform: "facebook", label: "iPlex on Facebook", href: "#", draft: true },
-    { platform: "x", label: "iPlex on X", href: "#", draft: true },
-    { platform: "instagram", label: "iPlex on Instagram", href: "#", draft: true },
+    { platform: "facebook", label: "iPlex on Facebook", href: "#" },
+    { platform: "x", label: "iPlex on X", href: "#" },
+    { platform: "instagram", label: "iPlex on Instagram", href: "#" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy", draft: true },
-    { label: "Terms and Condition", href: "/terms", draft: true },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms and Condition", href: "/terms" },
   ],
   careers: {
     heading: "Careers",
@@ -840,9 +882,9 @@ export const faqItems: readonly FaqItem[] = [
   },
 ];
 
-/** FAQ items that have an answer (unanswered ones show in dev only). */
+/** Every FAQ remains visible in the client preview. */
 export function visibleFaq(): FaqItem[] {
-  return faqItems.filter((item) => SHOW_DRAFTS || item.answer.trim() !== "");
+  return [...faqItems];
 }
 
 /** A valid value for <time dateTime>, or undefined while the date is still a [placeholder]. */

@@ -50,19 +50,18 @@
 }
 
 .featureSection {
-  padding-bottom: 100px;
+  padding-block: clamp(64px, 6vw, 100px);
 }
 
 .featureGrid {
   display: grid;
-  grid-template-columns: minmax(0, 588px) minmax(0, 588px);
-  justify-content: space-between;
-  gap: 64px;
-  padding-top: 100px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(32px, 4vw, 64px);
 }
 
 .featureCopy {
-  margin-top: 100px;
+  min-width: 0;
 }
 
 .featureCopy :global(.micro-label) {
@@ -82,8 +81,9 @@
 }
 
 .featureImageFrame {
+  position: relative;
   width: 100%;
-  aspect-ratio: 588 / 569;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 0 0 1px #25252a;
@@ -141,10 +141,6 @@
   content: "";
 }
 
-.results .featureCopy {
-  margin-top: 102px;
-}
-
 .resultsText {
   margin-top: 31px;
   color: #a8a8a8;
@@ -191,8 +187,13 @@
 }
 
 .valueCard {
-  position: relative;
-  min-height: 410px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 56px;
+  min-width: 0;
+  min-height: clamp(340px, 30vw, 410px);
+  padding: 24px;
   border: 1px solid #2c2c31;
 }
 
@@ -201,9 +202,7 @@
 }
 
 .valueIcon {
-  position: absolute;
-  top: 24px;
-  left: 24px;
+  flex-shrink: 0;
   width: 64px;
   height: 64px;
   color: #fff;
@@ -215,17 +214,14 @@
 }
 
 .valueCopy {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  left: 24px;
+  min-width: 0;
 }
 
 .valueCopy h3 {
   font-size: clamp(24px, 2.4vw, 32px);
   font-weight: 400;
   letter-spacing: -1.28px;
-  line-height: 38.4px;
+  line-height: 1.2;
 }
 
 .valueCopy p {
@@ -254,7 +250,7 @@
 
 .teamGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 40px 24px;
   margin: 48px 0 0;
   padding: 0;
@@ -318,24 +314,22 @@
 
 .achievementsGrid {
   display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 830px);
-  gap: clamp(32px, 8.9%, 110px);
-  min-height: 620px;
+  grid-template-columns: minmax(240px, .75fr) minmax(0, 2fr);
+  align-items: center;
+  gap: clamp(32px, 4vw, 64px);
 }
 
 .achievementsList {
   display: grid;
-  align-self: start;
-  grid-template-rows: repeat(4, minmax(115px, auto));
-  margin-top: 79px;
+  grid-template-rows: repeat(4, minmax(100px, auto));
 }
 
 .achievement {
   display: grid;
   grid-template-columns: 70px minmax(0, 1fr);
   gap: 16px;
-  min-height: 115px;
-  padding: 24px;
+  min-width: 0;
+  padding-block: 16px;
 }
 
 .achievement strong {
@@ -366,12 +360,13 @@
   letter-spacing: .72px;
   line-height: 14.4px;
   text-transform: uppercase;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .achievementImageFrame {
+  position: relative;
   width: 100%;
-  aspect-ratio: 830 / 620;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 0 0 1px #25252a;
@@ -382,30 +377,103 @@
   height: 100%;
   max-width: none;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 60%;
 }
 
+/* Same width and gutters as every other section, so the quote, portrait and controls sit on the page grid */
 .quoteSection {
+  width: min(var(--content), calc(100% - 2 * var(--gutter)));
+  margin-inline: auto;
   padding: 100px 0 27px;
+}
+
+/* Counter and arrows: top right, flush with the right edge of the cards above */
+.quoteTop {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .quoteInner {
   display: grid;
-  grid-template-columns: minmax(0, 498px) minmax(0, 348px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, clamp(260px, 28vw, 348px));
   grid-template-areas:
     "copy portrait"
     "attribution portrait";
   grid-template-rows: 1fr auto;
-  gap: 24px;
-  width: min(870px, calc(100% - 2 * var(--gutter)));
-  min-height: 430px;
-  margin-inline: auto;
+  column-gap: clamp(32px, 5vw, 80px);
+  row-gap: 24px;
 }
 
 .quoteCopy {
   grid-area: copy;
   margin-top: 6px;
-  text-align: center;
+  text-align: left;
+}
+
+.quoteInner[hidden] {
+  display: none;
+}
+
+.quoteInner:not([hidden]) {
+  animation: quote-appear 280ms ease-out;
+}
+
+@keyframes quote-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quoteExample {
+  display: block;
+  max-width: 360px;
+  margin-top: 12px;
+  color: #a8a8a8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.quoteCount {
+  color: #a8a8a8;
+  font-family: var(--font-geist-mono, Consolas), Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+/* Dots: centred under the quote */
+.quoteDots {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.quoteDots button {
+  display: grid;
+  width: 32px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+}
+
+.quoteDots button span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #55555e;
+}
+
+.quoteDots button[aria-current="true"] span,
+.quoteDots button:hover span {
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quoteInner:not([hidden]) { animation: none; }
 }
 
 .quoteMark {
@@ -413,23 +481,24 @@
   font-family: Georgia, serif;
   font-size: 68px;
   line-height: 68px;
-  text-align: center;
+  text-align: left;
   transform: translateY(-13px);
 }
 
 .quoteCopy blockquote {
+  max-width: 13.5em;
   margin-top: 17px;
   font-size: clamp(30px, 3.4vw, 48px);
   font-weight: 400;
   letter-spacing: -2.4px;
   line-height: 1;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .quoteAttribution {
   grid-area: attribution;
   align-self: end;
-  text-align: center;
+  text-align: left;
 }
 
 .quoteAttribution p {
@@ -452,6 +521,8 @@
 .portraitFrame {
   position: relative;
   grid-area: portrait;
+  align-self: start;
+  justify-self: end;
   width: 100%;
   aspect-ratio: 348 / 430;
   overflow: hidden;
@@ -460,7 +531,8 @@
 .portrait {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center top;
 }
 
 .portraitShade {
@@ -469,7 +541,28 @@
   background: linear-gradient(180deg, transparent 70%, rgba(1, 0, 4, .28));
 }
 
-@media (max-width: 1279px) {
+@media (min-width: 901px) and (max-width: 1279px) {
+  .featureCopy h2 {
+    font-size: clamp(34px, 3.6vw, 44px);
+    letter-spacing: -1.8px;
+    line-height: 1.08;
+  }
+}
+
+@media (max-width: 1100px) {
+  .valuesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 1px 0 0 1px;
+  }
+
+  .valueCard,
+  .valueCard + .valueCard {
+    margin: -1px 0 0 -1px;
+    border: 1px solid #2c2c31;
+  }
+}
+
+@media (max-width: 900px) {
   .page {
     padding-bottom: 32px;
   }
@@ -539,13 +632,8 @@
 
   .featureImageFrame {
     width: 100%;
-    height: min(112vw, 520px);
-  }
-
-  .featureImageTall {
-    width: 100%;
     height: auto;
-    min-height: 100%;
+    aspect-ratio: 4 / 3;
   }
 
   .featureStats {
@@ -593,29 +681,24 @@
   }
 
   .achievementsList {
-    grid-template-rows: repeat(4, 105px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    gap: 24px;
     margin-top: 0;
   }
 
   .achievement {
-    grid-template-columns: 110px minmax(0, 1fr);
-    min-height: 105px;
-    padding: 18px 10px;
+    grid-template-columns: 70px minmax(0, 1fr);
+    padding-block: 16px;
   }
 
   .achievementImageFrame {
     width: 100%;
-    height: min(82vw, 500px);
-  }
-
-  .achievementImage {
-    width: 100%;
     height: auto;
-    min-height: 100%;
   }
 
   .quoteSection {
-    padding: 88px 16px 0;
+    padding: 72px 0 0;
   }
 
   .quoteInner {
@@ -626,8 +709,11 @@
       "attribution";
     grid-template-rows: auto;
     gap: 34px;
-    width: 100%;
     min-height: 0;
+  }
+
+  .quoteDots {
+    margin-top: 16px;
   }
 
   .quoteCopy {
@@ -635,7 +721,8 @@
   }
 
   .quoteCopy blockquote {
-    font-size: 39px;
+    max-width: 20em;
+    font-size: clamp(30px, 5.4vw, 39px);
     letter-spacing: -1.8px;
     line-height: 1.05;
   }
@@ -646,7 +733,7 @@
 
   .portraitFrame {
     justify-self: center;
-    width: min(280px, 70vw);
+    width: min(300px, 74vw);
     aspect-ratio: 348 / 430;
     height: auto;
   }
@@ -665,7 +752,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .valuesGrid,
   .teamGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -51,6 +51,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   const study = resolveCaseStudy(entry);
   const related = relatedCaseStudies(slug).map(resolveCaseStudy);
+  const showSectionDividers = slug === "native-ai-copilot";
 
   return (
     <PageShell className={styles.page}>
@@ -82,6 +83,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </section>
 
+      {showSectionDividers ? <hr className={styles.sectionDivider} /> : null}
+
       <section className={styles.challenge}>
         <Image className={styles.challengeBackground} src={ASSETS.ctaBackdrop} alt="" fill sizes="1200px" unoptimized />
         <div className={styles.challengeShade} aria-hidden="true" />
@@ -91,6 +94,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           {study.challenge.attribution ? <p className={styles.attribution}>{study.challenge.attribution}</p> : null}
         </div>
       </section>
+
+      {showSectionDividers ? <hr className={styles.sectionDivider} /> : null}
 
       <section className={styles.approach}>
         <div className={styles.splitInner}>
@@ -104,6 +109,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
         </div>
       </section>
+
+      {showSectionDividers ? <hr className={styles.sectionDivider} /> : null}
 
       <section className={styles.results}>
         <div className={styles.splitInner}>
@@ -124,6 +131,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </section>
 
+      {showSectionDividers && related.length ? <hr className={styles.sectionDivider} /> : null}
+
       {related.length ? (
         <section className={styles.moreProjects} aria-labelledby="more-projects-title">
           <div className={styles.moreProjectsInner}>
@@ -136,7 +145,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               {related.map((project) => (
                 <article className={styles.relatedCard} key={project.slug}>
                   <div className={styles.relatedImage}>
-                    <Image src={project.cardImage} alt="" fill sizes="(max-width: 768px) 100vw, 392px" unoptimized />
+                    <Image className={project.cardImageLayout === "desktop-screen" ? "project-screenshot" : undefined} src={project.cardImage} alt="" fill sizes="(max-width: 768px) 100vw, 392px" unoptimized />
                   </div>
                   <div className={styles.relatedContent}>
                     {project.client.logo ? <Image src={project.client.logo} alt="" width={124} height={32} unoptimized /> : null}

@@ -82,7 +82,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </Link>
           </div>
 
-          <div className={styles.relatedGrid}>
+          <div className={`${styles.relatedGrid} article-card-grid`}>
             {related.map((item) => (
               <BlogCard post={item} key={item.slug} />
             ))}

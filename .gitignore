@@ -5,6 +5,7 @@
 
 # Next.js
 /.next/
+/.next-network/
 /out/
 
 # Production

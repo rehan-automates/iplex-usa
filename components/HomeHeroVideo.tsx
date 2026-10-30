@@ -5,8 +5,9 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 const HOME_HERO_PLAYBACK_RATE = 0.45;
 
 type HomeHeroVideoProps = {
+  /** Smaller WebM encode of the same clip; browsers that can play it use it, the rest fall back to `src`. */
+  webmSrc?: string;
   src: string;
-  poster: string;
 };
 
 function setPlaybackRate(video: HTMLVideoElement) {
@@ -28,7 +29,7 @@ function shouldSkipVideo() {
   return window.matchMedia(reducedMotionQuery).matches || Boolean(connection?.saveData);
 }
 
-export function HomeHeroVideo({ src, poster }: HomeHeroVideoProps) {
+export function HomeHeroVideo({ src, webmSrc }: HomeHeroVideoProps) {
   const skip = useSyncExternalStore(subscribe, shouldSkipVideo, () => true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
@@ -69,7 +70,6 @@ export function HomeHeroVideo({ src, poster }: HomeHeroVideoProps) {
         }}
         className="home-hero__video"
         data-ready={ready ? "true" : undefined}
-        poster={poster}
         autoPlay
         loop
         muted
@@ -92,6 +92,7 @@ export function HomeHeroVideo({ src, poster }: HomeHeroVideoProps) {
         }}
         onError={() => setReady(false)}
       >
+        {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
         <source src={src} type="video/mp4" />
       </video>
 

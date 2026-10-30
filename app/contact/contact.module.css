@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: minmax(0, 500px) minmax(0, 620px);
   column-gap: clamp(32px, 4vw, 64px);
-  justify-content: start;
+  justify-content: space-between;
   width: min(1240px, calc(100% - 2 * var(--gutter)));
   min-height: 718px;
   margin: 120px auto 0;
@@ -59,11 +59,10 @@
   .contact {
     grid-template-columns: minmax(0, .8fr) minmax(420px, 1.2fr);
     column-gap: clamp(20px, 2.5vw, 32px);
-    width: calc(100% - 32px);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .page {
     padding-bottom: 40px;
   }
@@ -71,7 +70,6 @@
   .contact {
     grid-template-columns: 1fr;
     gap: 36px;
-    width: calc(100% - 32px);
     min-height: 0;
     margin-top: 112px;
   }

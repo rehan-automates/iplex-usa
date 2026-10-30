@@ -11,7 +11,7 @@ const HomeHeroVideo = dynamic(
 
 type DynamicHomeHeroVideoProps = {
   src: string;
-  poster: string;
+  webmSrc?: string;
 };
 
 export function DynamicHomeHeroVideo(props: DynamicHomeHeroVideoProps) {

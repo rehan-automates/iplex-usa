@@ -54,7 +54,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 47.4%);
   gap: 0;
   width: 100%;
-  min-height: 720px;
+  min-height: 0;
   padding: 0;
   border: 1px solid #24262b;
   border-radius: 16px;
@@ -95,6 +95,21 @@
   line-height: 22.75px;
 }
 
+.serviceDetails {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 46ch;
+  margin-top: 28px;
+  padding-bottom: 32px;
+  color: #b9b9bf;
+  font-size: 16px;
+  letter-spacing: -.2px;
+  line-height: 1.55;
+  text-align: left;
+  hyphens: auto;
+}
+
 .deliverables {
   margin: 0;
   margin-top: auto;
@@ -121,12 +136,14 @@
 
 .serviceImage {
   position: relative;
-  align-self: stretch;
+  align-self: start;
   width: 100%;
   min-height: 0;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 0 15px 15px 0;
   background: #171717;
+  border-left: 1px solid #2b2d31;
 }
 
 .serviceImage img {
@@ -152,7 +169,7 @@
   }
 
   .servicesList {
-    width: calc(100% - 40px);
+    width: calc(100% - 2 * var(--gutter));
     max-width: var(--content);
     margin-top: 56px;
   }
@@ -162,7 +179,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .intro {
     margin-top: 104px;
   }
@@ -182,7 +199,6 @@
 
   .servicesList {
     gap: 20px;
-    width: calc(100% - 32px);
     margin-top: 48px;
   }
 
@@ -203,8 +219,9 @@
   }
 
   .serviceImage {
-    aspect-ratio: 1;
+    aspect-ratio: 4 / 3;
     border-radius: 12px;
+    border: 1px solid #2b2d31;
   }
 
   .cta {

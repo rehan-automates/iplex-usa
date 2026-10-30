@@ -1,17 +1,7 @@
 /**
- * Draft handling for content entries.
- *
- * An entry marked `draft: true` is a work in progress:
- *  - production (`next build`, including Vercel previews): hidden everywhere —
- *    lists, related grids, footer, `generateStaticParams`, and its own URL (404).
- *  - development (`npm run dev`): shown with a DRAFT badge, and any field you have
- *    not written yet renders as a [Placeholder] so you can see the empty slot.
- *
- * Flip `draft: true` to `draft: false` (or delete the line) once every field is
- * written. TypeScript then requires the complete set of fields for that entry.
+ * Content helpers for the client preview. All entries render in every environment.
+ * Draft metadata allows partially written entries without controlling visibility.
  */
-export const SHOW_DRAFTS = process.env.NODE_ENV === "development";
-
 export type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
 
 /**
@@ -21,15 +11,11 @@ export type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T
 export type Draftable<Base, Body> = Base &
   (({ draft: true } & DeepPartial<Body>) | ({ draft?: false } & Body));
 
-export function isVisible(item: { draft?: boolean }): boolean {
-  return SHOW_DRAFTS || !item.draft;
-}
-
 export function visible<T extends { draft?: boolean }>(items: readonly T[]): T[] {
-  return items.filter(isVisible);
+  return [...items];
 }
 
-/** Label shown in place of a field that has not been written yet (dev only). */
+/** Label shown in place of a field that has not been written yet. */
 export const ph = (label: string) => `[${label}]`;
 
 /** Fill the gaps of a partially written entry with placeholder values. */

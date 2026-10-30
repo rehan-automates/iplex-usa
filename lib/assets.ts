@@ -1,4 +1,13 @@
-const asset = (fileName: string) => `/assets/${fileName}`;
+import optimized from "./asset-manifest.json";
+
+/**
+ * `asset-manifest.json` maps an original file to its optimised WebP sibling (written by
+ * `node scripts/optimize-assets.mjs`). Originals stay in public/assets, so a file missing from the manifest —
+ * or an empty manifest — simply serves the original.
+ */
+const optimizedFiles: Readonly<Record<string, string>> = optimized;
+
+export const asset = (fileName: string) => `/assets/${optimizedFiles[fileName] ?? fileName}`;
 
 /**
  * Semantic paths for the original image payloads extracted from the Figma file.
@@ -6,13 +15,14 @@ const asset = (fileName: string) => `/assets/${fileName}`;
  */
 export const ASSETS = {
   logo: asset("9ec80305a487911b3718899bd05a058d7273641b.png"),
-  /** Stand-in for any image slot of a draft entry that has not been supplied yet (dev only). */
+  /** Stand-in for an image slot that has not been supplied yet. */
   placeholder: asset("placeholder.svg"),
 
   homeHeroAnimation: asset("632f5756c2d6fb41564d93cb5a398dc4290e9f51.gif"),
   homeHeroAnimated: asset("632f5756c2d6fb41564d93cb5a398dc4290e9f51.gif"),
   homeHeroStill: asset("c51e6941e7c11e7aa8f26c5af37c910e89289350.png"),
   homeHeroLoop: asset("home-hero-loop.mp4"),
+  homeHeroLoopWebm: asset("home-hero-loop.webm"),
   homeHeroPoster: asset("home-hero-poster.jpg"),
   mountainBackdrop: asset("79ccd6a9922709ac5bb6df4c9e199004cf7f8631.jpg"),
   whyUsBackground: asset("79ccd6a9922709ac5bb6df4c9e199004cf7f8631.jpg"),
@@ -45,8 +55,8 @@ export const ASSETS = {
   aboutApproach: asset("9b358afee638bd9f99888643310a6e7c6dec1552.jpg"),
   aboutResults: asset("507052140b2e1fe8b6a05f6eb71ebe1ff324f85f.jpg"),
   aboutAchievements: asset("e920f9e683fedfe8abcce6238e933570e9b41521.jpg"),
-  aboutTestimonial: asset("fda8e4c4e1e5d2e2962f1ab6fc3d934dd3464c3e.png"),
-  aboutPortrait: asset("fda8e4c4e1e5d2e2962f1ab6fc3d934dd3464c3e.png"),
+  aboutTestimonial: asset("testimonial-leadership-v2.webp"),
+  aboutPortrait: asset("testimonial-leadership-v2.webp"),
   teamMaya: asset("team-maya-chen.png"),
   teamOmar: asset("team-omar-haddad.png"),
   teamAmara: asset("team-amara-okafor.png"),

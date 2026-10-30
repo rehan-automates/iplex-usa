@@ -25,7 +25,7 @@ export default function BlogPage() {
         </p>
       </section>
 
-      <section className={styles.grid} aria-labelledby="blog-list-title">
+      <section className={`${styles.grid} article-card-grid`} aria-labelledby="blog-list-title">
         <h2 className="visually-hidden" id="blog-list-title">Latest articles</h2>
         {visible(blogPosts).map((post) => (
           <BlogCard post={post} key={post.slug} />

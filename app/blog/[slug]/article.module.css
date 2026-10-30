@@ -15,8 +15,9 @@
 
 .meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 4px 8px;
   color: #a8a8a8;
   font-family: var(--font-geist-mono, Consolas), monospace;
   font-size: 12px;
@@ -187,6 +188,7 @@
 
 .relatedHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
@@ -202,13 +204,16 @@
 }
 
 .more {
-  display: flex;
+  display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  justify-content: space-between;
-  width: 120px;
-  height: 46px;
-  padding: 0 15px;
+  justify-content: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  white-space: nowrap;
   border: 1px solid #34343a;
   border-radius: 8px;
   background: #1a1a1d;
@@ -223,33 +228,17 @@
 }
 
 .more svg {
+  flex-shrink: 0;
   width: 18px;
   height: 18px;
   color: #a8a8a8;
 }
 
 .relatedGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 38px;
   margin-top: 40px;
 }
 
-.relatedGrid :global(.blog-card-copy) {
-  margin-top: 24px;
-}
-
-.relatedGrid :global(.blog-card-title) {
-  margin-top: 14px;
-}
-
-@media (max-width: 1024px) {
-  .relatedGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .page {
     padding-bottom: 40px;
   }
@@ -265,8 +254,6 @@
 
   .hero {
     margin-top: 50px;
-    aspect-ratio: auto;
-    height: min(75vw, 520px);
   }
 
   .body {
@@ -291,7 +278,6 @@
   }
 
   .relatedGrid {
-    grid-template-columns: 1fr;
     margin-top: 42px;
   }
 

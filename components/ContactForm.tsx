@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
+import { BudgetSelect } from "./BudgetSelect";
 import styles from "./ContactForm.module.css";
 
 type FieldName = "name" | "email" | "message";
@@ -114,16 +115,7 @@ export function ContactForm({ termsHref, recipient }: ContactFormProps) {
       </div>
 
       <div className={styles.group}>
-        <label className={styles.field}>
-          <span>BUDGET</span>
-          <select name="budget" defaultValue="">
-            <option value="" disabled>Select budget range</option>
-            <option>$10k – $25k</option>
-            <option>$25k – $50k</option>
-            <option>$50k – $100k</option>
-            <option>$100k+</option>
-          </select>
-        </label>
+        <BudgetSelect />
       </div>
 
       <div className={styles.group} data-invalid={invalid("message")}>

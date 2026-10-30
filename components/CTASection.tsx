@@ -3,9 +3,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+import { ASSETS } from "@/lib/assets";
+
 import { ArrowIcon } from "./ArrowIcon";
 
-const ctaBackground = "/assets/9abd5e2bbc22eb7f25dacaa8fbfb530c1ec05a2f.jpg";
+const ctaBackground = ASSETS.ctaBackdrop;
 
 export type CTASectionProps = {
   title?: ReactNode;
@@ -29,7 +31,7 @@ export function CTASection({
 }: CTASectionProps = {}) {
   return (
     <section className={["site-cta", className].filter(Boolean).join(" ")}>
-      <img className="cta-background" src={ctaBackground} alt="" aria-hidden="true" />
+      <img className="cta-background" src={ctaBackground} alt="" aria-hidden="true" loading="lazy" decoding="async" />
       <div className="cta-scrim" aria-hidden="true" />
       <div className="cta-inner">
         <h2 className="cta-title">{title}</h2>

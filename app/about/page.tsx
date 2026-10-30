@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { CTASection } from "@/components/CTASection";
-import { DraftBadge } from "@/components/DraftBadge";
 import { PageShell } from "@/components/PageShell";
-import { Reveal } from "@/components/Reveal";
-import { about, teamForDisplay, type AboutValue } from "@/lib/content";
+import { about, exampleTestimonials, teamForDisplay, type AboutValue } from "@/lib/content";
+
+import { AboutTestimonials } from "./AboutTestimonials";
 
 import styles from "./about.module.css";
 
@@ -109,9 +109,8 @@ export default function AboutPage() {
               className={styles.featureImageTall}
               src={story.image.src}
               alt={story.image.alt}
-              width={588}
-              height={769}
-              sizes="(max-width: 1024px) calc(100vw - 32px), 588px"
+              fill
+              sizes="(max-width: 900px) calc(100vw - 32px), (max-width: 1279px) 48vw, 588px"
               unoptimized
             />
           </div>
@@ -125,9 +124,8 @@ export default function AboutPage() {
               className={styles.featureImageTall}
               src={expertise.image.src}
               alt={expertise.image.alt}
-              width={588}
-              height={769}
-              sizes="(max-width: 1024px) calc(100vw - 32px), 588px"
+              fill
+              sizes="(max-width: 900px) calc(100vw - 32px), (max-width: 1279px) 48vw, 588px"
               unoptimized
             />
           </div>
@@ -167,13 +165,12 @@ export default function AboutPage() {
             <p className="micro-label">{teamHeading.eyebrow}</p>
             <h2 id="about-team-title">
               {teamHeading.title}
-              {team.isPlaceholder ? <DraftBadge /> : null}
             </h2>
             <ul className={styles.teamGrid}>
               {team.members.map((member, index) => (
                 <li className={styles.teamCard} key={`${member.name}-${index}`}>
                   <div className={styles.teamPhoto}>
-                    <Image src={member.photo.src} alt={member.photo.alt} fill sizes="(max-width: 768px) 50vw, 280px" unoptimized />
+                    <Image src={member.photo.src} alt={member.photo.alt} fill sizes="(max-width: 480px) calc(100vw - 32px), (max-width: 768px) 48vw, (max-width: 1279px) 32vw, 397px" unoptimized />
                   </div>
                   <h3>{member.name}</h3>
                   <p className={styles.teamRole}>{member.role}</p>
@@ -214,39 +211,15 @@ export default function AboutPage() {
               className={styles.achievementImage}
               src={metricsImage.src}
               alt={metricsImage.alt}
-              width={831}
-              height={820}
-              sizes="(max-width: 1024px) calc(100vw - 32px), 830px"
+              fill
+              sizes="(max-width: 900px) calc(100vw - 32px), (max-width: 1279px) 65vw, 855px"
               unoptimized
             />
           </div>
         </div>
       </section>
 
-      <Reveal as="section" className={styles.quoteSection} aria-label="Leadership">
-        <div className={styles.quoteInner}>
-          <div className={styles.quoteCopy}>
-            <span className={styles.quoteMark} aria-hidden="true">“</span>
-            <blockquote>{leadership.quote}</blockquote>
-          </div>
-          <div className={styles.portraitFrame}>
-            <Image
-              className={styles.portrait}
-              src={leadership.portrait.src}
-              alt={leadership.portrait.alt}
-              width={348}
-              height={430}
-              sizes="(max-width: 1024px) calc(100vw - 32px), 348px"
-              unoptimized
-            />
-            <div className={styles.portraitShade} />
-          </div>
-          <div className={styles.quoteAttribution}>
-            <p>{leadership.name}</p>
-            <span>{leadership.role} of {leadership.company}</span>
-          </div>
-        </div>
-      </Reveal>
+      <AboutTestimonials leadership={leadership} examples={exampleTestimonials} />
 
       <CTASection />
     </PageShell>

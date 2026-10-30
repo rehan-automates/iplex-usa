@@ -3,6 +3,7 @@
   display: grid;
   gap: 32px;
   width: 100%;
+  min-width: 0;
   max-width: 620px;
   padding: 23px;
   border: 1px solid #34343a;
@@ -12,9 +13,15 @@
 
 .field {
   display: block;
+  min-width: 0;
 }
 
-.field > span {
+.group {
+  min-width: 0;
+}
+
+.field > span:not(.selectControl),
+.budgetLabel {
   display: block;
   height: 24px;
   color: #a8a8a8;
@@ -27,7 +34,7 @@
 }
 
 .field input,
-.field select,
+.selectTrigger,
 .field textarea {
   display: block;
   width: 100%;
@@ -42,17 +49,112 @@
   transition: border-color var(--motion-standard) var(--motion-ease), box-shadow var(--motion-standard) var(--motion-ease);
 }
 
-.field input,
-.field select {
+.field input {
   height: 60px;
   padding: 0 23px;
   line-height: 60px;
 }
 
-.field select {
-  padding-right: 66px;
-  color: #a8a8a8;
+.selectTrigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  padding: 14px 52px 14px 23px;
+  text-align: left;
+  line-height: 1.4;
   cursor: pointer;
+}
+
+.selectTrigger[data-placeholder="true"] {
+  color: #a8a8a8;
+}
+
+.selectTrigger > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.selectControl {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.selectControl[data-open="true"] {
+  z-index: 5;
+}
+
+.selectMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #48484e;
+  border-radius: 8px;
+  background: #141416;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 40%);
+  list-style: none;
+}
+
+.selectMenu[data-placement="top"] {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+.selectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.selectOption[data-active="true"] {
+  background: #323237;
+  outline: 1px solid #62626a;
+  outline-offset: -1px;
+}
+
+.selectArrow {
+  position: absolute;
+  top: 50%;
+  /* The path's 4px inset puts the visible chevron 24px from the edge,
+     matching the text inset on the other side of the field. */
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  color: #c5c5ca;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: color var(--motion-standard) var(--motion-ease), transform var(--motion-standard) var(--motion-ease);
+}
+
+.selectTrigger[aria-expanded="true"] .selectArrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.selectControl:hover .selectArrow,
+.selectControl:focus-within .selectArrow {
+  color: #fff;
 }
 
 .field textarea {
@@ -71,7 +173,7 @@
 
 /* Visible keyboard focus: a border change alone is too subtle, so add a ring */
 .field input:focus-visible,
-.field select:focus-visible,
+.selectTrigger:focus-visible,
 .field textarea:focus-visible {
   border-color: #fff;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .22);

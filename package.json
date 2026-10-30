@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "node scripts/dev.mjs",
+    "dev:network": "node scripts/dev.mjs network",
+    "test:network": "node --test scripts/dev.test.mjs",
+    "build": "next build --webpack && node scripts/verify-production-content.mjs",
+    "preview": "npm run build && next start -H 0.0.0.0",
     "start": "next start",
     "lint": "eslint ."
   },

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   const { careers } = siteInfo;
-  // Link the consent text to Terms only once that page is published.
+  // Use the same Terms link in development and deployment.
   const terms = visible(siteInfo.legal).find((page) => page.href === "/terms");
 
   return (

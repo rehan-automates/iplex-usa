@@ -1,5 +1,13 @@
 .page { display: flow-root; padding-bottom: 40px; }
 
+.sectionDivider {
+  width: min(var(--content), calc(100% - 2 * var(--gutter)));
+  height: 0;
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
 /* Hero — copy on the left, artwork on the right; heights follow the content */
 .hero { margin-top: 144px; padding-bottom: clamp(80px, 14vw, 200px); }
 .heroInner, .splitInner { display: grid; grid-template-columns: minmax(0, 556px) minmax(0, 620px); gap: 64px; width: min(1240px, calc(100% - 2 * var(--gutter))); min-height: 600px; margin: 0 auto; }
@@ -17,15 +25,15 @@
 .serviceInfo span { position: relative; padding-left: 18px; }
 .serviceInfo span::before { position: absolute; top: 4px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: #323135; content: ""; }
 
-.heroImage, .splitImage { position: relative; width: 100%; aspect-ratio: 620 / 600; overflow: hidden; border-radius: 8px; }
+.heroImage, .splitImage { position: relative; align-self: center; width: 100%; aspect-ratio: 1; overflow: hidden; border: 1px solid #24262b; border-radius: 8px; }
 .heroImage > img:first-child, .heroArtwork { object-fit: cover; }
 .heroArtwork { z-index: 1; }
 
 /* Challenge */
-.challenge { position: relative; width: min(1200px, calc(100% - 2 * var(--gutter))); min-height: 464px; margin: 0 auto; overflow: hidden; }
+.challenge { position: relative; width: min(1200px, calc(100% - 2 * var(--gutter))); min-height: clamp(260px, 32vw, 420px); margin: 0 auto; overflow: hidden; }
 .challengeBackground { object-fit: cover; }
 .challengeShade { position: absolute; inset: 0; background: linear-gradient(90deg,#010004 0%,rgba(1,0,4,.3) 18%,rgba(1,0,4,.3) 82%,#010004 100%),linear-gradient(180deg,#010004 0%,rgba(1,0,4,.32) 30%,rgba(1,0,4,.38) 70%,#010004 100%); }
-.challengeContent { position: relative; z-index: 1; width: min(800px, calc(100% - 2 * var(--gutter))); margin: 0 auto; padding: 120px 0 80px; text-align: center; }
+.challengeContent { position: relative; z-index: 1; width: min(800px, calc(100% - 2 * var(--gutter))); margin: 0 auto; padding: clamp(56px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); text-align: center; }
 .sectionLabel { display: flex; align-items: center; height: 24px; color: #d4d4d8; font-family: var(--font-geist-mono, Consolas), Consolas, monospace; font-size: 12px; font-weight: 500; letter-spacing: .96px; line-height: 12px; }
 .challenge .sectionLabel { justify-content: center; }
 .challenge blockquote { margin: 8px 0 0; font-size: clamp(24px, 2.6vw, 32px); font-weight: 400; letter-spacing: -1.28px; line-height: 1.2; text-wrap: balance; }
@@ -52,37 +60,39 @@
 /* More projects — built from the other published case studies */
 .moreProjects { padding: 100px 0; }
 .moreProjectsInner { width: min(1240px, calc(100% - 2 * var(--gutter))); margin: 0 auto; }
-.moreProjectsHeading { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 48px; }
+.moreProjectsHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 24px; min-height: 48px; }
 .moreProjectsHeading h2 { font-size: clamp(34px, 4vw, 48px); font-weight: 400; letter-spacing: -2.4px; line-height: 1; }
-.moreLink, .relatedContent > a { display: flex; align-items: center; justify-content: space-between; height: 46px; padding: 0 16px; border: 1px solid #414147; border-radius: 8px; background: #242428; font-size: 14px; transition: background-color var(--motion-standard) var(--motion-ease), border-color var(--motion-standard) var(--motion-ease); }
+.moreLink, .relatedContent > a { display: inline-flex; flex: 0 0 auto; align-self: flex-start; align-items: center; justify-content: center; gap: 12px; width: fit-content; max-width: 100%; min-height: 48px; padding: 12px 16px; border: 1px solid #414147; border-radius: 8px; background: #242428; font-size: 14px; white-space: nowrap; transition: background-color var(--motion-standard) var(--motion-ease), border-color var(--motion-standard) var(--motion-ease); }
 .moreLink:hover, .relatedContent > a:hover { border-color: #5b5b62; background: #2e2e33; }
-.moreLink { width: 120px; flex: 0 0 auto; }
-.moreLink svg, .relatedContent > a svg { width: 18px; height: 18px; color: #a8a8a8; }
+.moreLink svg, .relatedContent > a svg { flex-shrink: 0; width: 18px; height: 18px; color: #a8a8a8; }
 .relatedGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 48px; }
 .relatedImage { position: relative; width: 100%; aspect-ratio: 392 / 307; overflow: hidden; border-radius: 8px; }
 .relatedImage img { object-fit: cover; }
-.relatedContent { margin-top: 24px; }
+.relatedCard { display: flex; flex-direction: column; min-width: 0; }
+.relatedContent { display: flex; flex: 1; flex-direction: column; align-items: flex-start; margin-top: 24px; }
 .relatedContent > img { width: 124px; height: 32px; object-fit: contain; object-position: left center; filter: grayscale(1) brightness(6); }
 .relatedContent h3 { margin-top: 22px; font-size: 24px; font-weight: 400; letter-spacing: -1.2px; line-height: 28.8px; }
-.relatedContent p { margin-top: 6px; color: #a8a8a8; font-size: 16px; letter-spacing: -.32px; line-height: 22.4px; }
-.relatedContent > a { width: 100%; margin-top: 16px; justify-content: center; gap: 12px; }
+.relatedContent p { margin-top: 6px; padding-bottom: 20px; color: #a8a8a8; font-size: 16px; letter-spacing: -.32px; line-height: 22.4px; }
+.relatedContent > a { margin-top: auto; }
 @media (max-width: 1024px) {
   .heroInner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
   .approach .splitInner, .results .splitInner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
   .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .page { padding-bottom: 48px; }
   .hero { margin-top: 104px; padding-bottom: 0; }
+  .hero + .sectionDivider { margin-top: 40px; }
+  .sectionDivider + .challenge { margin-top: 40px; }
   .heroInner, .approach .splitInner, .results .splitInner { display: grid; grid-template-columns: 1fr; gap: 48px; min-height: 0; }
   .heroCopy { gap: 0; }
   .hero h1 { font-size: 42px; letter-spacing: -2px; line-height: 44px; }
   .projectInfo { margin-top: 48px; }
   .projectInfo .serviceInfo { min-height: 76px; padding-top: 5px; }
   .heroImage, .splitImage, .approach .splitImage, .results .splitImage { width: 100%; aspect-ratio: 1; }
-  .challenge { width: 100%; min-height: 520px; margin-top: 80px; }
-  .challengeContent { width: calc(100% - 40px); padding: 100px 0; }
+  .challenge { width: 100%; min-height: 0; margin-top: 80px; }
+  .challengeContent { width: calc(100% - 2 * var(--gutter)); padding: 64px 0; }
   .challenge blockquote { font-size: 26px; line-height: 32px; }
   .approach, .results { padding: 110px 0; }
   .approachCopy h2, .resultsCopy h2 { font-size: 39px; line-height: 42px; }
@@ -90,8 +100,7 @@
   .resultsCopy { order: 1; }
   .resultsStats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .moreProjects { padding: 80px 0; }
-  .moreProjectsInner { width: calc(100% - 32px); }
-  .moreProjectsHeading h2 { font-size: 39px; }
+  .moreProjectsHeading h2 { font-size: clamp(30px, 5vw, 39px); }
   .relatedGrid { grid-template-columns: 1fr; gap: 70px; }
 }
 
@@ -99,5 +108,4 @@
   .hero h1 { font-size: 37px; line-height: 39px; }
   .projectInfo > div { grid-template-columns: 78px 1fr; }
   .resultsStats strong { font-size: 42px; }
-  .moreLink { width: 105px; }
 }

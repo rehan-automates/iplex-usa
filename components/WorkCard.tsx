@@ -22,7 +22,7 @@ export function WorkCard({ project, index = 0 }: WorkCardProps) {
     >
       <div className="work-card-media">
         <img
-          className="work-card-image"
+          className={`work-card-image${study.cardImageLayout === "desktop-screen" ? " project-screenshot" : ""}`}
           src={study.cardImage}
           alt=""
           loading={index === 0 ? "eager" : "lazy"}

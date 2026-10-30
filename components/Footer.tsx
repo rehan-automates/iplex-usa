@@ -3,11 +3,12 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+import { ASSETS } from "@/lib/assets";
 import { siteInfo, visible, type SocialLink } from "@/lib/content";
 
-const footerLogo = "/assets/9ec80305a487911b3718899bd05a058d7273641b.png";
-const footerMotion = "/assets/347c615881b659a74d52e560d6c00089e2b701d4.gif";
-const footerStill = "/assets/6b5fb31731d5f3618f25467b52a4bbe7b3b4302b.png";
+const footerLogo = ASSETS.logo;
+const footerMotion = ASSETS.footerAnimation;
+const footerStill = ASSETS.footerStill;
 
 function FacebookIcon() {
   return (
